@@ -1,0 +1,2 @@
+Skrives om til å bruke konfigurasjon
+

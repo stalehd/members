@@ -1,0 +1,96 @@
+{% extends 'templates/common.html' %}
+{% block title %}Rediger modell{% endblock %}
+
+{% block content %}
+{{ navbar(active='models') }}
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/ranges">Modellserier</a></li>
+        <li class="active">{{ range.name }}</li>
+    </ol>
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-horizontal" role="form" method="POST">
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Navn</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" name="name" value="{{ range.name }}" placeholder="Navn"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="yearfrom" class="col-sm-2 control-label">Start produksjon</label>
+                    <div class="col-sm-2">
+                        <input type="number" class="form-control" id="yearfrom" name="yearfrom" value="{{ range.year_start }}" placeholder="År fra"/>
+                    </div>
+                    <div class="col-sm-8">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="yearto" class="col-sm-2 control-label">Slutt produksjon</label>
+                    <div class="col-sm-2">
+                        <input type="number" class="form-control" id="yearto" name="yearto" value="{{ range.year_end }}" placeholder="År til"/>
+                    </div>
+                    <div class="col-sm-8">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="notes" class="col-sm-2 control-label">Beskrivelse</label>
+                    <div class="col-sm-10">
+                        <textarea rows="3" class="form-control" id="notes" name="notes">{% if range.notes %}{{ range.notes }}{% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-10">
+                        <button type="submit" name="store" value="1" class="btn btn-primary">Lagre</button>
+                        <button type="submit" name="cancel" value="1" class="btn btn-default">Avbryt</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Navn</th>
+                        <th>Produksjonsår</th>
+                        <th>Tipo</th>
+                        <th>Motorkode</th>
+                        <th>Registrerte</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for model in models %}
+                    <tr>
+                        <td>
+                            <a href="{{ model.key() }}/edit">
+                                {{ model.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ model.key() }}/edit">
+                                {{ model.year_from }} - {% if model.year_to > 0 %} {{ model.year_to }} {% endif %}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ model.key() }}/edit">
+                                {{ model.typeno }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ model.key() }}/edit">
+                                {{ model.engine_code }}
+                            </a>
+                        </td>
+                        <td>{{ counter.get_members_with_model(model) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

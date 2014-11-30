@@ -1,0 +1,96 @@
+{% extends 'templates/common.html' %}
+{% block title %}Medlemmer{% endblock %}
+
+{% block content %}
+{{ navbar(active='members') }}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li class="active">Medlemmer</li>
+            </ol>
+        </div>
+    </div>
+
+    {{ searchbox() }}
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Nummer</th>
+                <th>Navn</th>
+                <th class="hidden-xs hidden-sm">Adresse</th>
+                <th class="hidden-xs hidden-sm">Postnr/sted</th>
+                <th class="hidden-xs hidden-sm">Type</th>
+                <th class="hidden-xs hidden-sm">Status</th>
+                <th class="hidden-xs">Epost</th>
+                <th class="hidden-xs">Telefon</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for member in members %}
+            <tr>
+                <td>
+                    <a href="members/{{ member.key }}/edit">
+                        {{ member.number }}
+                    </a>
+                </td>
+                <td>
+                    <a href="members/{{ member.key }}/edit">
+                        {{ member.name }}
+                    </a>
+                </td>
+                <td class="hidden-xs hidden-sm">
+                    <a href="members/{{ member.key }}/edit">
+                        {{ member.address }}
+                    </a>
+                </td>
+                <td class="hidden-xs hidden-sm">
+                    <a href="members/{{ member.key }}/edit">
+                        {{ member.zipcode }} {{ member.city }}
+                    </a>
+                </td>
+                <td class="hidden-xs hidden-sm">
+                    <a href="members/{{ member.key }}/edit">
+                        {{ member.membertype }}
+                    </a>
+                </td>
+                <td class="hidden-xs hidden-sm">
+                    <a href="members/{{ member.key }}/edit">
+                        {{ member.status }}
+                    </a>
+                </td>
+                <td class="hidden-xs">
+                    <a href="members/{{ member.key }}/edit">
+                        {% if member.email %}{{ member.email }}{% endif %}
+                    </a>
+                </td>
+                <td class="hidden-xs">
+                    <a href="members/{{ member.key }}/edit">
+                        {% if member.phone %}{{ member.phone }}{% endif %}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="8">{{ found }} av {{ total }} medlemmer {% if shown < found %} ({{ shown }} vist) {% endif %} </td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <!-- <ul class="pagination pagination-lg">
+        <li class="disabled"><a href="#">&laquo;</a></li>
+        <li class="active"><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+        <li><a href="#">4</a></li>
+        <li><a href="#">5</a></li>
+        <li><a href="#">6</a></li>
+        <li><a href="#">&raquo;</a></li>
+    </ul> -->
+
+</div>
+{% endblock %}

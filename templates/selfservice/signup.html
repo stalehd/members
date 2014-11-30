@@ -1,0 +1,165 @@
+{% extends 'templates/common_selfservice.html' %}
+{% block title %}Innmelding KARN{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+
+            <h1>Bli medlem i KARN</h1>
+            <p>
+                Prisen for et medlemsskap er 400 kroner per år. Dette inkluderer fire
+                nummer av Alfanytt.
+            </p>
+            <p> Som KARN-medlem kan du få en rekke rabatter på forskjellige butikker
+                rundt i landet. Du kan se
+                <a href="http://www.klubbalfaromeo.no/om-klubben/medlemsfordeler.html">
+                    medlemsfordelene på denne siden.
+                </a>
+            </p>
+            <p>
+                Når du har registrert deg får du tilsendt en epost med en innbetalingsgiro med medlemskontingenten. Når du har betalt denne så får du tilsendt en velkomstpakke med noen nummer av Alfanytt og klubbklistermerker samt et medlemskort. I denne eposten står det også en kode du kan bruke for å redigere kontaktinformasjon og profilen din hos KARN, bla. hvilke Alfa Romeo du eier.
+            </p>
+            <p>
+                Om du ønsker å melde adresseendring, endre epostadressen din eller telefonnummeret ditt så må du bruke den tilsendte koden så det kan være lurt å ta vare på koden du mottar. Ta kontakt med <a href="mailto:webmaster@klubbalfaromeo.no">webmaster KARN</a> om du har problemer med å logge deg inn eller du ikke får noen epost.
+            </p>
+        </div>
+    </div>
+    {% if incomplete %}
+        {% if error_message %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-danger">
+                {{ error_message }}
+            </div>
+        </div>
+    </div>
+        {% else %}
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="alert alert-danger">
+                Ett eller flere felt i skjemaet er ikke fylt ut!
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-sm-12">
+            <form class="form-horizontal" role="form" method="post">
+                <div class="form-group {% if 'name' in complete %}has-success has-feedback{% endif %} {%if 'name' in incomplete %}has-error has-feedback{% endif %}">
+                    <label for="name" class="col-sm-4 control-label">Navn</label>
+                    <div class="col-sm-6">
+                        <input type="textr" class="form-control" id="name" name="name"
+                            placeholder="Navn" value="{{ values['name'] }}"  required="1"/>
+                        {% if 'name' in incomplete %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{%endif%}
+                        {% if 'name' in complete %}<span class="glyphicon glyphicon-ok form-control-feedback"></span>{%endif%}
+                    </div>
+                    <div class="col-sm-2">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group {% if 'address' in complete %}has-success has-feedback{% endif %} {%if 'address' in incomplete %}has-error has-feedback{% endif %}">
+                    <label for="address" class="col-sm-4 control-label">Adresse</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="address" name="address"
+                            placeholder="Adresse" value="{{ values['address'] }}"  required/>
+                        {% if 'address' in incomplete %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{%endif%}
+                        {% if 'address' in complete %}<span class="glyphicon glyphicon-ok form-control-feedback"></span>{%endif%}
+                    </div>
+                    <div class="col-sm-2">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group {% if 'zipcity' in complete %}has-success has-feedback{% endif %} {%if 'zipcity' in incomplete %}has-error has-feedback{% endif %}">
+                    <label for="zip" class="col-sm-4 control-label">Postnr/sted</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="zip" name="zip"
+                        placeholder="Postnr" value="{{ values['zip'] }}"  required="1"/>
+                        {% if 'zipcity' in incomplete %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{%endif%}
+                        {% if 'zipcity' in complete %}<span class="glyphicon glyphicon-ok form-control-feedback"></span>{%endif%}
+                    </div>
+                    <div class="col-sm-4">
+                        <input type="text" class="form-control" id="city" name="city"
+                        placeholder="Poststed" value="{{ values['city'] }}"  required="1"/>
+                        {% if 'zipcity' in incomplete %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{%endif%}
+                        {% if 'zipcity' in complete %}<span class="glyphicon glyphicon-ok form-control-feedback"></span>{%endif%}
+                    </div>
+                    <div class="col-sm-2">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="country" class="col-sm-4 control-label">Land</label>
+                    <div class="col-sm-6">
+                        <select class="form-control" name="country">
+                            {% for country in countries %}
+                            <option value="{{ country.key() }}"{%
+                            if (values['country'] and values['country'] == country.name) or 'Norge' == country.name
+                            %} selected="1" {%
+                            endif %}>{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        &nbsp;
+                    </div>
+
+                </div>
+
+                <div class="form-group {% if 'email' in complete %}has-success has-feedback{% endif %} {%if 'email' in incomplete %}has-error has-feedback{% endif %}">
+                    <label for="mail" class="col-sm-4 control-label">Epost</label>
+                    <div class="col-sm-6">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="epost"
+                            value="{{ values['email'] }}" required="1"/>
+                        {% if 'email' in incomplete %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{%endif%}
+                        {% if 'email' in complete %}<span class="glyphicon glyphicon-ok form-control-feedback"></span>{%endif%}
+                    </div>
+                    <div class="col-sm-2">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="mobile" class="col-sm-4 control-label">Telefon</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="mobile" name="mobile" value="{{ values['mobile'] }}" placeholder="Mobil"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="home" name="home" value="{{ values['home'] }}" placeholder="Telefon hjem"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="work" name="work" value="{{ values['work'] }}" placeholder="Telefon arbeid"/>
+                    </div>
+                    <div class="col-sm-2">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comment" class="col-sm-4 control-label">Eventuelle kommentarer</label>
+                    <div class="col-sm-6">
+                        <textarea id="comment" name="comment" rows="4" class="form-control">{{ values['work'] }}</textarea>
+                    </div>
+                    <div class="col-sm-2">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-8">
+                        <button type="submit" name="store" value="1" class="btn btn-primary">Jeg vil bli medlem!</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="http://www.klubbalfaromeo.no/">Tilbake til Klubb Alfa Romeo Norges hjemmeside</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

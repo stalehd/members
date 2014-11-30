@@ -1,0 +1,46 @@
+{% extends 'templates/common_selfservice.html' %}
+{% block title %}Innmelding KARN{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Takk!</h1>
+            <p>
+                Du har nå mottatt en epost med bekreftelse. Eposten inneholder en tilgangskode om du ønsker å endre
+                adresse eller epostadresse. Du kan også legge inne Alfaer du eier og/eller har eid om du vil, men
+                det er frivillig. <a href="{{ profile_url }}">Du kan redigere profilen din på denne siden</a>.
+            </p>
+            <p>
+                Vi har registrert følgende informasjon om deg:
+                <table class="table">
+                    <tbody>
+                        <tr><th class="text-right">Navn</th>        <td>{{ values['name'] }}</td></tr>
+                        <tr><th class="text-right">Adresse</th>     <td>{{ values['address'] }}</td></tr>
+                        <tr><th class="text-right">Postnr/sted</th> <td>{{ values['zip'] }} {{ values['city'] }}</td></tr>
+                        <tr><th class="text-right">Land</th>        <td>{{ values['country'] }}</td></tr>
+                        <tr><th class="text-right">Epost</th>       <td>{{ values['email'] }}</td></tr>
+                        <tr><th class="text-right">Telefon</th>     <td>{{ values['mobile'] }} / {{ values['home'] }} / {{ values['work'] }} </td></tr>
+                        <tr><th class="text-right">Type medlem</th> <td>{{ values['type'] }}</td></tr>
+                    </tbody>
+                </table>
+            </p>
+            <p>
+                Når du betaler kontigenten på {{ price }} til konto {{ accountno }} så vil du motta en velkomstpakke med et par nummer av Alfanytt og klubbmerker du kan sette på bilen.
+            </p>
+            <p>
+                Vi har sendt deg en epost med kopi av denne informasjonene og en innbetalingsblankett.
+                <div class="alert alert-info">
+                    <strong>Viktig!</strong> Hvis du betaler i nettbank så må du skrive epostadressen du har registrert deg med slik at
+                    betalingen blir registrert på rett person!
+                </div>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="http://www.klubbalfaromeo.no/">Tilbake til Klubb Alfa Romeo Norges hjemmeside</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

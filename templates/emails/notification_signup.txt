@@ -1,0 +1,15 @@
+Et nytt medlem har registrert seg på klubbsidene. Følgende informasjon er registrert:
+
+Navn:        {{ member.name }}
+Adresse:     {{ member.address }}
+Postnr/sted: {{ member.zip }} {{ member.city }}
+Epost:       {{ member.email|string }}
+
+Statusen på medlemmet er satt til 'Innmeldt'. Når betalingen er klar så
+kan medlemspakken sendes ut.
+
+For å redigere så kan du gå til {{ server_url }}/members/{{member.key()}}/edit
+
+
+----
+Dette er en automatisk utsendt epost fra {{ server_url }}.

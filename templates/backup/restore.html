@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="no">
+    <head>
+        <meta charset="utf-8">
+        <title>Portello: Data Restore</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                font-size: 14pt;
+            }
+            #dropfolder {
+                border: 10px dashed #ccc;
+                width: 500px;
+                height: 300px;
+                margin: 20px auto;
+                text-align: center;
+                padding: 50px;
+            }
+            #dropfolder.hover {
+                border: 10px dashed #333;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Restore</h1>
+        {% if message %}
+            <p>{{ message }}. <a href="/restore">reload</a></p>
+        {% else %}
+            <p>Drag and drop to restore backup</p>
+            <div id="dropfolder">[drop here]</div>
+        {% endif %}
+    </body>
+    <form method="post" id="restoreform">
+        <input id="filename" type="hidden" name="filename"/>
+        <input id="contents" type="hidden" name="contents"/>
+    </form>
+
+    <script>
+    function importFile(fileArray) {
+        for (var i = 0; i < fileArray.length; i++) {
+            if (fileArray[i].name == 'backup.json') {
+                var fileName = fileArray[i].name;
+                console.debug('Will import ' + fileName);
+                reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById("filename").value = fileName;
+                    document.getElementById("contents").value = event.target.result;
+                    document.getElementById("restoreform").submit();
+                    console.debug('Submitted');
+                }
+                reader.readAsText(fileArray[i]);
+            }
+        }
+    }
+    var holder = document.getElementById('dropfolder');
+    if (holder) {
+        holder.ondragover = function () { this.className = 'hover'; return false; };
+        holder.ondragend = function () { this.className = ''; return false; };
+        holder.ondrop = function (e) {
+            this.className = '';
+            e.preventDefault();
+
+            var list = [];
+            for (var i = 0; i < e.dataTransfer.files.length; i++) {
+                list.push(e.dataTransfer.files[i]);
+            }
+
+            importFile(list);
+            return false;
+        }
+    }
+    </script>
+</html>

@@ -1,0 +1,42 @@
+{% extends 'templates/common.html' %}
+{% block title %}Type{% endblock %}
+
+{% block content %}
+{{ navbar(active='types') }}
+
+<div class="container">
+     <ol class="breadcrumb">
+        <li><a href="/start">Start</a></li>
+        <li class="active">Typer</li>
+    </ol>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Type</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Sortering</th>
+                        <th>Type</th>
+                        <th>Kontingent</th>
+                        <th>Antall</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for membertype in types %}
+                    <tr>
+                        <td><a href="types/{{ membertype.key() }}/edit">{{ membertype.order }}</a></td>
+                        <td><a href="types/{{ membertype.key() }}/edit">{{ membertype.name }}</a></td>
+                        <td><a href="types/{{ membertype.key() }}/edit">{{ membertype.fee }}</a></td>
+                        <td>
+                            <a href="/members?type={{ membertype.name }}">
+                                {{ counter.get_members_with_type(membertype) }} medlemmer
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

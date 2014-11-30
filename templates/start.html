@@ -1,0 +1,150 @@
+{% extends 'templates/common.html' %}
+{% block title %}Start{% endblock %}
+
+{% block content %}
+{{ navbar(active='start') }}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Søk<small>{{ counter.get_member_count() }} medlemmer med {{ counter.get_car_count() }} biler</small></h2>
+        </div>
+    </div>
+    {{ searchbox() }}
+
+    <div class="row">
+        <div class="col-md-12">
+            {% if signed_up|length > 0 %}
+            <hr/>
+            <h3>Velkomstpakke <small>registrert og venter på å få tilsendt velkomstpakke</small></h3>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Navn</th>
+                        <th>Adresse</th>
+                        <th colspan="2">e-post</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in signed_up %}
+                    <tr>
+                        <td>
+                            <a href="/members/{{ member.key }}/edit">
+                                {{ member.membertype }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/members/{{ member.key }}/edit">
+                                {{ member.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/members/{{ member.key }}/edit">
+                               {{ member.address }}, {{ member.zip }} {{ member.city }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/members/{{ member.key }}/edit">
+                                {{ member.email }}
+                            </a>
+                        </td>
+                        <td>
+                            <form method="post" action="/members/{{ member.key }}/processed">
+                                <input type="hidden" name="return" value="/start" />
+                                <button class="btn btn-xs btn-primary" type="submit">
+                                    Velkomstpakke sendt
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% if welcome_letter|length > 0 %}
+            <hr/>
+            <h3>Innbetaling <small>har mottatt velkomstpakke men ikke betalt kontingent</small></h3>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Navn</th>
+                        <th>Adresse</th>
+                        <th colspan="2">e-post</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in welcome_letter %}
+                    <tr>
+                        <td>
+                            <a href="/members/{{ member.key }}/edit">
+                                {{ member.membertype }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/members/{{ member.key }}/edit">
+                                {{ member.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/members/{{ member.key }}/edit">
+                                {{ member.address }}, {{ member.zip }} {{ member.city }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="/members/{{ member.key }}/edit">
+                                {{ member.email }}
+                            </a>
+                        </td>
+                        <td>
+                            <form method="post" action="/members/{{ member.key }}/processed">
+                                <input type="hidden" name="return" value="/start"/>
+                                <button class="btn btn-xs btn-success" type="submit">
+                                    Mottatt betaling
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <hr/>
+            <h2>Konfigurasjon</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <a href="ranges">{{ counter.get_range_count() }} serier med {{ counter.get_model_count() }} bilmodeller</a>
+        </div>
+        <div class="col-md-2">
+            <a href="countries">{{ counter.get_country_count() }} land</a>
+        </div>
+        <div class="col-md-2">
+            <a href="statuses">{{ counter.get_status_count() }} statuser</a>
+        </div>
+        <div class="col-md-2">
+            <a href="types">{{ counter.get_type_count() }} medlemstyper</a>
+        </div>
+        <div class="col-md-4">
+            <a href="settings">Innstillinger</a>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <hr/>
+        <div class="col-md-12"><h3>Medlemstjenester</h3></div>
+        <a href="/selfservice/signup">Registrering av nye medlemmer</a> og <a href="/selfservice/profile">Redigere medlemsprofil</a> (trenger medlemsnummer og kode)
+    </div>
+</div>
+{% endblock %}

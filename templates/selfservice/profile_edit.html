@@ -1,0 +1,124 @@
+{% extends 'templates/common_selfservice.html' %}
+{% block title %}Rediger profil{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <h1>Min profil</h1>
+    {% if message %}
+    <div class="alert alert-success">{{ message }}</div>
+    {% endif %}
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h4>Navn og adresse</h4>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" role="form" method="post">
+
+                <div class="form-group">
+                    <label for="no" class="col-sm-2 control-label">Nummer</label>
+                    <div class="col-sm-2">
+                        <input readonly
+                            type="text" class="form-control" id="no" name="no" placeholder="id"
+                            value="{{ member.number }}" size="6"/>
+                    </div>
+                    <div class="col-sm-8">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Navn</label>
+                    <div class="col-sm-6">
+                        <input required type="text" class="form-control" id="name" name="name" placeholder="Navn" value="{{ member.name }}"/>
+                    </div>
+                    <div class="col-sm-4">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address" class="col-sm-2 control-label">Adresse</label>
+                    <div class="col-sm-10">
+                        <input required type="text" class="form-control" id="address" name="address"
+                        value="{{ member.address }}"
+                        placeholder="Adresse"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="zip" class="col-sm-2 control-label">Postnr/sted</label>
+                    <div class="col-sm-2">
+                        <input required type="text" class="form-control" id="zip" name="zip"
+                        placeholder="Postnr" value="{{ member.zipcode }}" />
+                    </div>
+                    <div class="col-sm-8">
+                        <input required type="text" class="form-control" id="city" name="city"
+                        placeholder="Poststed" value="{{ member.city }}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="country" class="col-sm-2 control-label">Land</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="country">
+                            {% for country in countries %}
+                            <option value="{{ country.key() }}"{%
+                            if member.country.name == country.name
+                            %} selected="1" {%
+                            endif %}>{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mail" class="col-sm-2 control-label">Epost</label>
+                    <div class="col-sm-10">
+                        <input required type="email" class="form-control" id="email" name="email" placeholder="epost"
+                        {% if member.email %}
+                        value="{{ member.email }}"
+                        {% endif %} />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mobile" class="col-sm-2 control-label">Telefon</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="mobile" name="mobile"
+                        {% if member.phone %} value="{{ member.phone }}" {% endif %}
+                        placeholder="Mobil"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="fixed" name="fixed" placeholder="Telefon hjem"
+                        {% if member.phone_home %} value="{{ member.phone_home }}" {% endif %} />
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="work" name="work" placeholder="Telefon arbeid"
+                        {% if member.phone_work %} value="{{ member.phone_work }}" {% endif %}/>
+                    </div>
+                    <div class="col-sm-1">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-danger">Lagre</button>
+                        <button type="reset" class="btn btn-primary">Tilbakestill</button>
+                    </div>
+                    <input type="hidden" name="edit" value="1"/>
+                </div>
+            </form>
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel -->
+
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <a href="/selfservice/logout" class="btn btn-warning">Logg ut</a>
+        </div>
+    </div>
+
+</div> <!-- panel -->
+{% endblock %}
+{% block script %}
+
+{% endblock %}

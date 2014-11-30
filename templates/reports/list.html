@@ -1,0 +1,97 @@
+{% extends 'templates/common.html' %}
+{% block title %}Lister{% endblock %}
+
+{% block content %}
+{{ navbar(active='types') }}
+
+<div class="container">
+     <ol class="breadcrumb">
+        <li><a href="/start">Start</a></li>
+        <li class="active">Lister</li>
+    </ol>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Genererte lister</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-md-3">Navn</th>
+                        <th class="col-md-2">Dato</th>
+                        <th class="col-md-6">Beskrivelse</th>
+                        <th class="col-md-1">Stuff</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for file in files %}
+                    <tr>
+                        <td><a target="_blank" href="/reports/view/{{ file.filename }}">
+                            {{ file.report.name() }}
+                        </a></td>
+                        <td>{{ file.date }}</td>
+                        <td>
+                           {{ file.report.description() }}
+                        </td>
+                        <td><form action="/reports/download/{{ file.filename }}" method="get">
+                            <button
+                                class="btn btn-primary"
+                                type="submit">
+                                Last ned
+                            </button>
+                        </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Lag ny liste</h2>
+            <p>
+                Når du oppretter en ny liste kan det ta noen minutter før den
+                dukker opp i oversikten over genererte lister.
+            </p>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-md-4">Navn</th>
+                        <th class="col-md-8" colspan="2">Beskrivelse</th>
+                </thead>
+                <tbody>
+                    {% for report in generators %}
+                    <tr>
+                        <td>{{ report.name() }}</td>
+                        <td>{{ report.description() }}</td>
+                        <td>
+                            <button
+                                class="btn btn-success"
+                                onClick="makeReport(this, '{{ report.id() }}')">
+                                Opprett
+                            </button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<form id="generator_form" method="post" action="/reports/generate">
+    <input type="hidden" id="report_id" name="report_id" value=""/>
+</form>
+
+<script>
+function makeReport(sender, reportId) {
+    // trick of the mind: Give feedback, then reload page
+    // => something happened.
+    $(sender).addClass('disabled');
+    $(sender).removeClass('btn-success');
+    setTimeout(function() {
+        $('#report_id').val(reportId);
+        $('#generator_form').submit();
+    },500);
+}
+</script>
+{% endblock %}

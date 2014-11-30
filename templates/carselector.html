@@ -1,0 +1,129 @@
+<!-- model chooser form -->
+<div class="modal fade" id="carForm">
+    <div class="modal-dialog  modal-lg">
+        <div class="modal-content">
+
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Velg modell</h4>
+        </div>
+
+        <div class="modal-body">
+            <form class="form-horizontal" role="form">
+                <div class="form-group">
+                    <label for="range" class="col-sm-2 control-label">Modellserie</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="range" id="range" onChange="CarSelector.showModels()">
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12" style="height:25em; overflow:scroll">
+                        <table id="models" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Navn</th>
+                                    <th>Tipo</th>
+                                    <th>Motorkode</th>
+                                    <th>År</th>
+                                </tr>
+                            </thead>
+                            <tbody id="model-rows">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Avbryt</button>
+        </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script>
+
+var CarSelector = window.CarSelector || { callback: null };
+
+/**
+ * Update model list when another range is selected.
+ */
+CarSelector.showModels = function() {
+    var range = $('#range').val();
+    $.ajax({
+        url: '/ajax/ranges/' + range + '/models.json',
+        type: 'GET',
+        dataType: 'json'
+    }).done(function(data) {
+        $('#model-rows').empty();
+        for (var i = 0; i < data.length; i++) {
+            var model = data[i];
+            var link = "javascript:window.CarSelector.pickModel('" + model.key + "', '" + model.name + "', '" + model.tipo + "', '" + model.motore + "')";
+            var html = '<tr>'
+                + '<td><a href="' + link + '">' + model.name + '</a></td>'
+                + '<td><a href="' + link + '">' + model.tipo + '</a></td>'
+                + '<td><a href="' + link + '">' + model.motore + '</a></td>'
+                + '<td><a href="' + link + '">' + model.years + '</a></td>'
+                + '</tr>';
+            $('#model-rows').append(html);
+        }
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        // TODO: Proper reporting
+        console.debug('Bugger - no model - ' + textStatus + ': ' + errorThrown);
+    });
+}
+/**
+ * Show the dialog
+ */
+CarSelector.showDialog = function() {
+    $('#carForm').modal();
+    $.ajax({ url: '/ajax/ranges.json', type: 'GET', dataType:'json'
+    }).done(function(data) {
+        $('#range').empty();
+        for (var i = 0; i < data.length; i++) {
+            var range = data[i];
+            var element = $('<option value="' + range.key + '">' + range.name + ' (' + range.years + ')</option>');
+            $('#range').append(element);
+        }
+        CarSelector.showModels();
+    }).error(function(jqXHR, textStatus, errorThrown) {
+        // TODO: Proper error reporting.
+        console.debug('Bugger - ' +textStatus + ': ' + errorThrown);
+    });
+}
+
+
+
+/**
+ * Post message and hide dialog
+ */
+CarSelector.pickModel = function(key, name, tipo, motori) {
+    window.postMessage({ name: 'carSelected', modelKey: key, modelName: name, modelType: tipo, modelEngine: motori }, '*');
+    $('#carForm').modal('hide');
+}
+
+// Plumbing for the events
+addEventListener('message', function(event){
+        if (event.data == 'getCar') {
+            CarSelector.showDialog();
+        }
+        if (event.data.name == 'carSelected') {
+            if (CarSelector.callback) {
+                CarSelector.callback(event.data.modelKey, event.data.modelName, event.data.modelType, event.data.modelEngine);
+            }
+        }
+    }, false);
+
+
+/**
+ * Select car method; use callback to retrieve answer.
+ */
+CarSelector.selectCar = function(selectedCallback) {
+    CarSelector.callback = selectedCallback;
+    postMessage('getCar','*');
+}
+
+</script>
+

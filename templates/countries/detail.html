@@ -1,0 +1,38 @@
+{% extends 'templates/common.html' %}
+{% block title %}Rediger land{% endblock %}
+
+{% block content %}
+{{ navbar(active='countries') }}
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/countries">Land</a></li>
+        <li class="active">{{ country.name }}</li>
+    </ol>
+
+    <form class="form-horizontal" role="form" method="post">
+        <div class="form-group">
+            <label for="order" class="col-sm-2 control-label">Sortering</label>
+            <div class="col-sm-2">
+                <input type="number" class="form-control" id="order" name="order" placeholder="Navn" value="{{country.order}}"/>
+            </div>
+            <div class="col-sm-8">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="countryname" class="col-sm-2 control-label">Navn</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="countryname" name="countryname" placeholder="Navn" value="{{country.name}}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-10">
+                <button type="submit" name="store" value="1" class="btn btn-primary">Lagre</button>
+                <button type="submit" name="cancel" value="1" class="btn btn-default">Avbryt</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

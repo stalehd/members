@@ -1,0 +1,57 @@
+{% extends 'templates/common_selfservice.html' %}
+{% block title %}Rediger profil{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h1>Rediger KARN-profil</h1>
+        </div>
+    </div>
+    <form class="form-horizontal" role="form" method="post">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <label for="memberno" class="col-sm-6 control-label">Medlemsnummer</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control"
+                            id="memberno" name="memberno" placeholder="Medlemsnummer" value=""/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="accesscode" class="col-sm-6 control-label">Tilgangskode</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control"
+                            id="accesscode" name="accesscode" placeholder="Tilgangskode" value=""/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary">Logg inn</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <p>
+                Du må logge inn for å redigere profilen. Medlemsnummer og tilgangskode kan
+                du finne på medlemskortet eller i eposten du fikk når du meldte deg inn i klubben.
+            </p>
+            <p>
+                Dersom du har problemer med å logge deg inn kan du ta kontakt med
+                <a href="mailto:webmaster@klubbalfaromeo.no">
+                    webmaster@klubbalfaromeo.no
+                </a>.
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    $('#loginform').modal('show');
+</script>
+{% endblock %}

@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>Portello: Backup</title>
+         <style>
+                body {
+                    font-family: sans-serif;
+                    font-size: 14pt;
+                }
+        </style>
+    </head>
+    <body>
+        <h1>Existing backups</h1>
+        <ul>
+            {% for file in files %}
+            <div> {{ file.filename }} - {{ (file.st_size/1000000)|round(2) }} MB </div>
+            {% endfor %}
+        </ul>
+        <p>
+{{ message }}
+        </p>
+        <form method="post">
+            <input type="submit" value="Do backup">
+        </form>
+    </body>
+</html>

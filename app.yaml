@@ -1,0 +1,70 @@
+application: klubbalfaromeonorge
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+builtins:
+- deferred: on
+- remote_api: on
+
+libraries:
+- name: webapp2
+  version: latest
+- name: jinja2
+  version: latest
+
+handlers:
+- url: /favicon.ico
+  static_files: images/favicon.ico
+  upload: images/favicon.ico
+
+#- url: /load/.*
+#  login: admin
+#  secure: always
+#  script: portello.application
+
+- url: /images
+  static_dir: images
+  login: optional
+  auth_fail_action: redirect
+
+- url: /static
+  static_dir: static
+  login: optional
+
+- url: /ajax/.*
+  login: optional
+  secure: always
+  script: portello.application
+
+- url: /cron/.*
+  login: admin
+  secure: always
+  script: portello.application
+
+#- url: /backup
+#  login: admin
+#  secure: always
+#  script: portello.application
+
+- url: /restore
+  login: admin
+  secure: always
+  script: portello.application
+
+- url: /selfservice/.*
+  login: optional
+  secure: always
+  script: portello.application
+
+# This handler catches all requests that don't match a previous handler.
+- url: /.*
+  login: required
+  secure: always
+  auth_fail_action: redirect
+  script: portello.application
+
+# This is the import-stuff handler for CSV data. Can be skipped on production
+# deployments
+

@@ -1,0 +1,43 @@
+{% extends 'templates/common.html' %}
+{% block title %}Land{% endblock %}
+
+{% block content %}
+
+{{ navbar(active='countries') }}
+
+<div class="container">
+     <ol class="breadcrumb">
+        <li class="active">Land</li>
+    </ol>
+    <form action="/countries/newcountry/edit" method="post">
+        <input type="hidden" name="deletelist" value=""/>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Land</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Sortering</th>
+                            <th>Land</th>
+                            <th>Antall</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for country in countries %}
+                        <tr>
+                            <td><a href="countries/{{ country.key() }}/edit">{{ country.order }}</a></td>
+                            <td><a href="countries/{{ country.key() }}/edit">{{ country.name }}</a></td>
+                            <td>
+                                <a href="/members?country={{ country.name }}">
+                                    {{ counter.get_members_with_country(country) }} medlemmer
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

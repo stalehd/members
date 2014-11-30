@@ -1,0 +1,40 @@
+{% extends 'templates/common.html' %}
+{% block title %}Modelliste{% endblock %}
+
+{% block content %}
+{{ navbar(active='models') }}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li class="active">Modellserier</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Modellserier</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Navn</th>
+                        <th>Produksjonsår</th>
+                        <th>Modeller</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for range in ranges %}
+                    <tr>
+                        <td><a href="ranges/{{ range.key() }}/edit">{{ range.name }}</a></td>
+                        <td><a href="ranges/{{ range.key() }}/edit">{{ range.year_start }} - {% if range.year_end > 0 %} {{ range.year_end }} {% endif %}</a></td>
+                        <td>{{ counter.get_models_in_range(range) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
