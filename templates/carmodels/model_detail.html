@@ -1,0 +1,110 @@
+{% extends 'templates/common.html' %}
+{% block title %}Rediger modell{% endblock %}
+
+{% block content %}
+{{ navbar(active='models') }}
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/ranges">Modellserier</a></li>
+        <li><a href="/ranges/{{ range.key() }}/edit">{{ range.name }}</a></li>
+        <li class="active">{{ model.name }}</li>
+    </ol>
+    <div class="row">
+        <div class="col-md-12">
+            <form class="form-horizontal" role="form" method="POST">
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Navn</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" name="name" value="{{ model.name }}" placeholder="Navn"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="yearfrom" class="col-sm-2 control-label">Produksjon fra</label>
+                    <div class="col-sm-2">
+                        <input type="number" class="form-control" id="yearfrom" name="yearfrom" value="{{ model.year_from }}" placeholder="År fra"/>
+                    </div>
+                    <div class="col-sm-8">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="yearto" class="col-sm-2 control-label">Produksjon til</label>
+                    <div class="col-sm-2">
+                        <input type="number" class="form-control" id="yearto" name="yearto" value="{{ model.year_to }}" placeholder="År til"/>
+                    </div>
+                    <div class="col-sm-8">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tipo" class="col-sm-2 control-label">Tipo</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="tipo" name="tipo" value="{{ model.typeno }}" placeholder="Tipo"/>
+                    </div>
+                    <div class="col-sm-7">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="engine" class="col-sm-2 control-label">Motorkode</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="engine" name="engine" value="{{ model.engine_code }}" placeholder="Motorkode"/>
+                    </div>
+                    <div class="col-sm-7">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="image_url" class="col-sm-2 control-label">URL til bilde</label>
+                    <div class="col-sm-10">
+                        <input type="link" class="form-control" id="image_url" name="image_url" value="{% if model.image_url %}{{ model.image_url }}{% endif %}" placeholder="URL"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="notes" class="col-sm-2 control-label">Notater</label>
+                    <div class="col-sm-10">
+                        <textarea rows="3" class="form-control" id="notes" name="notes">{% if model.notes %}{{ model.notes }}{% endif %}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-10">
+                        <button type="submit" name="store" value="1" class="btn btn-primary">Lagre</button>
+                        <button type="submit" name="cancel" value="1" class="btn btn-default">Avbryt</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <h4>Medlemmer med denne modellen</h4>
+
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Medlemsnr</th>
+                            <th>Navn</th>
+                            <th>Registreringsnr</th>
+                            <th>Årsmodell</th>
+                            <th>Kjøpt</th>
+                            <th>Solgt</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for car in model.cars %}
+                        <tr>
+                            <td><a href="/members/{{car.member.key()}}/car/{{car.key()}}/edit">{{ car.member.number }}</a></td>
+                            <td><a href="/members/{{car.member.key()}}/car/{{car.key()}}/edit">{{ car.member.name }}</a></td>
+                            <td><a href="/members/{{car.member.key()}}/car/{{car.key()}}/edit">{{ car.registration }}</a></td>
+                            <td><a href="/members/{{car.member.key()}}/car/{{car.key()}}/edit">{{ car.year if car.year }}</a></td>
+                            <td><a href="/members/{{car.member.key()}}/car/{{car.key()}}/edit">{{ car.bought_year if car.bought_year }}</a></td>
+                            <td><a href="/members/{{car.member.key()}}/car/{{car.key()}}/edit">{{ car.sold_year if car.sold_year}}</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

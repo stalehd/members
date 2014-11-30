@@ -1,0 +1,27 @@
+{% extends 'templates/common.html' %}
+{% block title %}Forhåndsvis epost{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-10">
+            <div class="panel panel-primary">
+            <div class="panel-heading">
+                Forhåndsvis epost
+            </div>
+            <div class="panel-body">
+                Teksten bør ikke være over 80 tegn i bredden.
+                <pre>{{ text }}
+                </pre>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-default" onClick="window.close()">Lukk</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

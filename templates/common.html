@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="no">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Portello: {% block title %}{% endblock %}</title>
+
+    <!-- Bootstrap -->
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css" >
+    <style>
+        /* add more space for navbar */
+        body { margin-top: 80px; }
+    </style>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    {% macro navbar(active) -%}
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                </button>
+                <a href="/start"><img src="/images/portello-logo.png" max-width="200" height="50" border="0"/></a>
+            </div><!-- navbar-header -->
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li{% if (active == 'start') %} class="active"{% endif %}>
+                        <a href="/">Start</a>
+                    </li>
+                    <li{% if (active == 'members') %} class="active"{% endif %}>
+                        <a href="/members">Medlemmer</a>
+                    </li>
+                    <li{% if (active == 'reports') %} class="active"{% endif %}>
+                        <a href="/reports">Lister</a>
+                    </li>
+                    <li{% if (active == 'models') %} class="active"{% endif %}>
+                        <a href="/ranges">Bilmodeller</a>
+                    </li>
+                    <li class="dropdown {% if (active == 'settings' or active == 'statuses' or active == 'types' or active == 'countries' or active == 'settings' or active == 'options') %} active{% endif %}">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Innstillinger <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li{% if (active == 'statuses') %} class="active"{% endif %}>
+                                <a href="/statuses"{% if (active == 'statuses') %} class="active"{% endif %}>
+                                    Status
+                                </a>
+                            </li>
+                            <li{% if (active == 'types') %} class="active"{% endif %}>
+                                <a href="/types">
+                                    Medlemstyper
+                                </a>
+                            </li>
+                            <li{% if (active == 'countries') %} class="active"{% endif %}>
+                                <a href="/countries">
+                                    Land
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li{% if (active == 'settings') %} class="active"{% endif %}>
+                                <a href="/settings">
+                                    Epost, giro og varsling
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- navbar-collapse -->
+        </div><!-- container-fluid -->
+    </nav>
+    {%- endmacro %}
+
+
+    {% macro searchbox() -%}
+    <div class="row">
+        <div class="col-md-12">
+              <form role="search" id="filterform" method="GET" action="/members">
+                <div class="input-group input-group-lg">
+                    <input type="text" class="form-control" id="search"
+                    autocomplete="off" value="{{ current_search }}"
+                    name="search" placeholder="Søk etter medlem">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">Søk</button>
+                    </span>
+                </div><!-- /input-group -->
+                <input type="hidden" name="status" id="current_status" value="{{current_status}}" />
+                <input type="hidden" name="type" id="current_type" value="{{current_type}}" />
+                <input type="hidden" name="option" id="current_option" value="{{current_option}}" />
+              </form>
+        </div>
+    </div>
+    {%- endmacro %}
+
+    {% block content %}
+    {% endblock %}
+
+
+    <hr/>
+    <div class="container">
+      &copy; 2014 Klubb Alfa Romeo Norge.
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  </body>
+</html>

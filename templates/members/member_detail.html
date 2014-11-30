@@ -1,0 +1,389 @@
+{% extends 'templates/common.html' %}
+{% block title %}Rediger medlem{% endblock %}
+
+{% block content %}
+{{ navbar(active='members') }}
+
+<style>
+.membership_dues_pill {
+    border-radius: 8px;
+    border: solid 1px silver;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding: 4px 16px 4px 16px;
+    line-height: 2.5em;
+    margin-left: 8px;
+}
+
+.membership_dues_pill.active {
+    cursor: pointer;
+}
+
+.membership_dues_pill.disabled {
+    color: silver;
+    background-color: #DDDDDD;
+}
+
+.membership_dues_pill.disabled {
+    color: silver;
+    background-color: #DDDDDD;
+}
+
+.membership_dues_pill.active.paid {
+    background-color: #BBFFBB;
+}
+.membership_dues_pill.active.paid:hover {
+    background-color: #55FF55;
+}
+
+.membership_dues_pill.active.unpaid {
+    background-color: #FFBBBB
+}
+.membership_dues_pill.active.unpaid:hover {
+    background-color: #FF9999;
+}
+
+.membership_dues_pill.disabled.paid {
+    color: #00AA00;
+    border-color: #00AA00;
+}
+
+.membership_dues_pill.disabled.unpaid {
+    color: #AA0000;
+    border-color: #AA0000;
+}
+
+</style>
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/members">Medlemmer</a></li>
+        <li class="active">{{ member.name }}</li>
+    </ol>
+
+    <h2>Rediger medlem</h2>
+
+    <form class="form-horizontal" role="form" method="POST" id="memberform">
+        <div class="panel panel-primary">
+
+            <div class="panel-heading">Personopplysninger</div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label for="no" class="col-sm-2 control-label">Nummer</label>
+                    <div class="col-sm-2">
+                        <input readonly="1"
+                            type="text" class="form-control" id="no" name="no" placeholder="id"
+                            value="{{ member.number }}" size="6"/>
+                    </div>
+                    <div class="col-sm-8">
+                        <small>
+                            Medlem siden: {{ member.member_since}}, Sist endret: {{ member.last_change.strftime('%Y-%m-%d') }}
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Navn</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" name="name"
+                        value="{{ member.name }}"
+                        placeholder="Navn"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address" class="col-sm-2 control-label">Adresse</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="address" name="address"
+                        value="{{ member.address }}"
+                        placeholder="Adresse"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="zip" class="col-sm-2 control-label">Postnr/sted</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="zip" name="zip"
+                        placeholder="Postnr" value="{{ member.zipcode }}" />
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="city" name="city"
+                        placeholder="Poststed" value="{{ member.city }}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="country" class="col-sm-2 control-label">Land</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="country">
+                            {% for country in countries %}
+                            <option value="{{ country.key() }}"{%
+                            if member.country.name == country.name
+                            %} selected="1" {%
+                            endif %}>{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mail" class="col-sm-2 control-label">Epost</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="epost"
+                        {% if member.email %}
+                        value="{{ member.email }}"
+                        {% endif %} />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mobile" class="col-sm-2 control-label">Telefon</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="mobile" name="mobile"
+                        {% if member.phone %} value="{{ member.phone }}" {% endif %}
+                        placeholder="Mobil"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="fixed" name="fixed" placeholder="Telefon hjem"
+                        {% if member.phone_home %} value="{{ member.phone_home }}" {% endif %} />
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="work" name="work" placeholder="Telefon arbeid"
+                        {% if member.phone_work %} value="{{ member.phone_work }}" {% endif %}/>
+                    </div>
+                    <div class="col-sm-1">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="type" class="col-sm-2 control-label">Type medlem</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="type" id="type">
+                            {% for type in types %}
+                            <option value="{{ type.key() }}"{%
+                            if member.membertype.name == type.name
+                            %} selected="1" {%
+                            endif %}>{{ type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="col-sm-2 control-label">Status</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="status" id="status">
+                            {% for status in statuses %}
+                            <option value="{{ status.key() }}"{%
+                            if status.name == member.status.name
+                            %} selected="1" {%
+                            endif
+                            %}>{{ status.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Kontingent</label>
+                    <div class="col-sm-10">
+                        {# ------------------------------------------------------------------ #}
+                        {# convoluted code ahead: The membership dues have no less than five  #}
+                        {# different states to contend with:                                  #}
+                        {# 1. editable, paid, ie paid and editable                            #}
+                        {# 2. editable, unpaid, ie unpaid but editable                        #}
+                        {# 3. non-editable, paid, ie paid in the past                         #}
+                        {# 4. non-editable, unpaid, ie not paid in the past                   #}
+                        {# 5. not applicable, ie not a member at the time                     #}
+                        {# ------------------------------------------------------------------ #}
+                        {% for due in dues %}
+                            {% set due_class = 'paid' if due.paid else 'unpaid' %}
+                            {% if member.member_since.year <= due.year %}
+                                {% if due.year >= current_year %}
+                            <input type="hidden" name="due{{ due.year }}" id="due{{ due.year }}" value="{{ due.paid }}" >
+                            <span id="duectl_{{ due.year }}"
+                                onClick="togglePayment('{{ due.year }}')"
+                                class="membership_dues_pill active {{ due_class }}">{{ due.year }}</span>
+                                {% else %}
+                            <span class="membership_dues_pill disabled {{ due_class }}">{{ due.year }}</span>
+                                {% endif %}
+                            {% else %}
+                            <span class="membership_dues_pill disabled">{{ due.year }}</span>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="note" class="col-sm-2 control-label">Notater</label>
+                    <div class="col-sm-10">
+                        <textarea id="note" name="note" rows="4" class="form-control">{{ member.notes }}</textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="access_code" class="col-sm-2 control-label">Redigeringskode</label>
+                    <div class="col-sm-2">
+                        <input type="text" readonly id="access_code" name="access_code" value="{{ member.edit_access_code if member.edit_access_code != None }}"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="button" class="btn btn-sm btn-danger" onClick="makeCode()">Generer ny kode</button>
+                    </div>
+                    <div class="col-sm-6">
+                        Denne redigeringskoden brukes som passord på profilsidene.
+                    </div>
+                </div>
+
+            </div> <!-- panel-content -->
+        </div> <!-- info panel -->
+
+        <div class="form-group">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-10">
+                <input type="hidden" name="operation" value="member"/>
+                <button type="submit" name="store" value="1" class="btn btn-primary">Lagre</button>
+                <button type="submit" name="cancel" value="1" class="btn btn-default">Avbryt</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">Biler</div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Reg. nr</th>
+                                <th>Årsmodell</th>
+                                <th>Modellserie</th>
+                                <th>Modell</th>
+                                <th>Tipo</th>
+                                <th>Motorkode</th>
+                                <th>Chassinr</th>
+                                <th>Kjøpt år</th>
+                                <th>Solgt år</th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for car in member.cars %}
+                            <tr>
+                                <td>
+                                    <a href="car/{{ car.key() }}/edit">
+                                        {{ car.registration }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="car/{{ car.key() }}/edit">
+                                        {% if car.year > 0 %}
+                                        {{ car.year }}
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="car/{{ car.key() }}/edit">
+                                        {{ car.model.model_range.name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="car/{{ car.key() }}/edit">
+                                        {{ car.model.name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="car/{{ car.key() }}/edit">
+                                        {{ car.model.typeno }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="car/{{ car.key() }}/edit">
+                                        {{ car.model.engine_code }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="car/{{ car.key() }}/edit">
+                                        {{ car.model.serial_no }}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="car/{{ car.key() }}/edit">
+                                        {% if car.bought_year %}
+                                            {{ car.bought_year }}
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="car/{{ car.key() }}/edit">
+                                        {% if car.sold_year %}
+                                            {{ car.sold_year }}
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td>
+                                    <button title="Slett bil" type="button" class="close" aria-hidden="true"
+                                            onClick="deleteCar('{{ car.key() }}')">
+                                        &times;
+                                    </button>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        <div class="row">
+            <div class="col-sm-2">
+                &nbsp;
+            </div>
+            <div class="col-sm-10">
+                <button name="newcar" type="button" onClick="newCar()" class="btn btn-success" value="1">Ny bil...</button>
+            </div>
+        </div>
+        <form method="POST" id="carMutations">
+            <input type="hidden" name="operation" value="" />
+            <input type="hidden" name="car_key" value="" />
+        </form>
+
+        </div> <!-- panel-body -->
+    </div> <!-- panel -->
+</div>
+
+<script>
+function makeCode() {
+    var existingCode = $('#access_code').val();
+    if (existingCode != '') {
+        if (!confirm('Dette vil overskrive den eksisterende aksesskoden på medlemskortet! Koden genereres når brukeren lagres.')) {
+            return;
+        }
+    }
+    $('#access_code').val('');
+}
+
+function togglePayment(year) {
+    var elem = $('#duectl_' + year);
+    elem.toggleClass('paid');
+    elem.toggleClass('unpaid');
+    if (elem.hasClass('paid')) {
+        $('#due' + year).val('True');
+    }
+    else {
+        $('#due' + year).val('False');
+    }
+}
+
+function deleteCar(key) {
+    if (!confirm('Er du sikker på at du vil slette denne bilen?')) {
+        return;
+    }
+    $('#carMutations :input[name="operation"]').val('delete_car');
+    $('#carMutations :input[name="car_key"]').val(key);
+    $('#carMutations').submit();
+}
+function newCar() {
+    $('#carMutations :input[name="operation"]').val('new_car');
+    $('#carMutations :input[name="car_key"]').val('');
+    $('#carMutations').submit();
+}
+
+</script>
+
+
+{% endblock %}

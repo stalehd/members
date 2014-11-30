@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="no">
+  <head>
+    <meta charset="utf-8">
+    <title>Portello: Debug</title>
+    <style>
+      #dropfolder { border: 10px dashed #ccc; width: 300px; height: 300px; margin: 20px auto;}
+      #dropfolder.hover { border: 10px dashed #333; }
+    </style>
+  </head>
+  <body>
+    <h1>Import</h1>
+    <div id="dropfolder"></div>
+  </body>
+  <form method="post" id="importform">
+    <input id="formtype" type="hidden" name="type"/>
+    <input id="formdata" type="hidden" name="data"/>
+  </form>
+
+  <script>
+  function importFile(fileName, fileArray) {
+    for (var i = 0; i < fileArray.length; i++) {
+      if (fileArray[i].name == fileName) {
+        console.debug('Will import ' + fileName);
+        reader = new FileReader();
+        reader.onload = function(event) {
+          console.log('Importing ' + fileName);
+          document.getElementById("formtype").value = fileName;
+          document.getElementById("formdata").value = event.target.result;
+          document.getElementById("importform").submit();
+        }
+        reader.readAsText(fileArray[i]);
+      }
+    }
+  }
+  var holder = document.getElementById('dropfolder');
+  holder.ondragover = function () { this.className = 'hover'; return false; };
+  holder.ondragend = function () { this.className = ''; return false; };
+  holder.ondrop = function (e) {
+    this.className = '';
+    e.preventDefault();
+
+    var list = [];
+    for (var i = 0; i < e.dataTransfer.files.length; i++) {
+      list.push(e.dataTransfer.files[i]);
+    }
+
+    importFile('countries.csv', list);
+    importFile('status.csv', list);
+    importFile('types.csv', list);
+    importFile('options.csv', list);
+    importFile('model_ranges.csv', list);
+    importFile('car_models.csv', list);
+    importFile('member.csv', list);
+    importFile('cars.csv', list);
+    importFile('users.csv', list);
+    return false;
+  };
+
+  </script>
+</html>

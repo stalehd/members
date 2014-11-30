@@ -1,0 +1,147 @@
+{% extends 'templates/common.html' %}
+{% block title %}Innstillinger{% endblock %}
+
+{% block content %}
+{{ navbar(active='settings') }}
+
+<div class="container">
+
+    <form class="form-horizontal" role="form" method="post">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Velkomstepost
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="welcome_sender" class="col-sm-2 control-label">Avsender velkomstepost</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="welcome_sender" name="welcome_sender" value="{{ config.get('WELCOME_MAIL_SENDER') }}">
+                    </div>
+                    <div class="col-sm-4">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="welcome_subject" class="col-sm-2 control-label">Emne på velkomstepost</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="welcome_subject" name="welcome_subject" value="{{ config.get('WELCOME_MAIL_SUBJECT') }}"/>
+                    </div>
+                    <div class="col-sm-2">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="welcome_body" class="col-sm-2 control-label">Tekst i velkomstepost</label>
+                    <div class="col-sm-10">
+                        <textarea rows="12" class="form-control" id="welcome_body" name="welcome_body">{{ config.get('WELCOME_MAIL_TEXT') }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-10">
+                        <a href="settings/welcome" target="_blank" class="btn btn-info">Vis eksempel på epost</a>
+                    </div>
+                </div>
+            </div> <!-- panel-body -->
+        </div> <!-- panel -->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Interne varsel
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+
+                    <label for="notification_recipients" class="col-sm-2 control-label">Mottagere for interne varsel</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="notification_recipients" name="notification_recipients"
+                            value="{{ config.get('NOTIFICATION_MAIL_RECIPIENTS')}}"/>
+                    </div>
+                    <div class="col-sm-2">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="notification_subject" class="col-sm-2 control-label">Emne på intern varselsepost</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="notification_subject" name="notification_subject"
+                            value="{{ config.get('NOTIFICATION_MAIL_SUBJECT') }}"/>
+                    </div>
+                    <div class="col-sm-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                Velkomstgiro
+            </div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label for="account_no" class="col-sm-2 control-label">Kontonummer</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="account_no" name="account_no"
+                            value="{{ config.get('GIRO_ACCOUNT_NO') }}"/>
+                    </div>
+                    <div class="col-sm-2">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="heading" class="col-sm-2 control-label">Overskrift</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="heading" name="heading"
+                            value="{{ config.get('GIRO_SUBJECT') }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="body" class="col-sm-2 control-label">Tekst</label>
+                    <div class="col-sm-10">
+                        <textarea rows="8" class="form-control" id="body" name="body" >{{ config.get('GIRO_TEXT') }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="giro_message" class="col-sm-2 control-label">Melding til mottaker</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="giro_message" name="giro_message"
+                            value="{{ config.get('GIRO_MESSAGE') }}"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address" class="col-sm-2 control-label">Mottageradresse</label>
+                    <div class="col-sm-10">
+                        <textarea rows="4" class="form-control" id="address" name="address" >{{ config.get('GIRO_ADDRESS') }}</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-2">
+                    </div>
+                    <div class="col-sm-10">
+                        <a href="settings/pdf" target="_blank" class="btn btn-info">Vis eksempel på giro</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-10">
+                <button type="submit" name="store" value="1" class="btn btn-primary">Lagre</button>
+                <button type="reset" name="cancel" value="1" class="btn btn-default">Nullstill</button>
+            </div>
+        </div>
+
+    </form>
+
+</div>
+{% endblock %}

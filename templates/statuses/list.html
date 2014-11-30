@@ -1,0 +1,39 @@
+{% extends 'templates/common.html' %}
+{% block title %}Status{% endblock %}
+
+{% block content %}
+{{ navbar(active='statuses') }}
+
+<div class="container">
+     <ol class="breadcrumb">
+        <li class="active">Statuser</li>
+    </ol>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Status</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Sortering</th>
+                        <th>Status</th>
+                        <th>Søk</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for status in statuses %}
+                    <tr>
+                        <td><a href="statuses/{{ status.key() }}/edit">{{ status.order }}</a></td>
+                        <td><a href="statuses/{{ status.key() }}/edit">{{ status.name }}</a></td>
+                        <td>
+                            <a href="/members?status={{ status.name }}">
+                                {{ counter.get_members_with_status(status) }} medlemmer
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
