@@ -37,6 +37,7 @@ import views.selfservice.signup
 import views.settings
 import views.statuses
 import views.types
+import views.caredit
 import webapp2
 
 application = webapp2.WSGIApplication([
@@ -94,5 +95,6 @@ application = webapp2.WSGIApplication([
     webapp2.Route('/reports/view/<filename>', handler=views.reports.ReportViewer),
 
     webapp2.Route('/load', handler=views.load.Loader),
+    webapp2.Route('/caredit', handler=views.caredit.CarEdit),
 
 ], debug=True)

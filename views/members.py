@@ -101,9 +101,7 @@ class List(utils.auth.AuthHandler):
 
 class Detail(utils.auth.AuthHandler):
     def __add_missing_dues(self, dues, start, stop):
-        print start, stop, range(start,stop+1)
         years = range(start, stop + 1)
-        print years
         for due in dues:
             if due.year in years:
                 years.remove(due.year)
@@ -230,12 +228,25 @@ class MemberProcess(utils.auth.AuthHandler):
         member = Member.get(member_id)
         if member.status.name == constants.SIGNUP_STATUS_NAME:
             member.status = self.get_status(constants.WELCOME_LETTER_NAME)
+            # update the status to paid membership due.
+            dues = MembershipDues.all().ancestor(member).fetch(25)
+            current_year = datetime.datetime.now().year
+            found = False
+            for due in dues:
+                if due.year == current_year:
+                    due.paid = True
+                    found = True
+                    print 'Updated existing due'
+                    due.put()
+            if not found:
+                print 'Due not found, created new'
+                due = MembershipDues(parent=member, year=current_year, paid=True)
+                due.put()
             member.put()
         elif member.status.name == constants.WELCOME_LETTER_NAME:
             member.status = self.get_status(constants.DEFAULT_MEMBER_STATUS_NAME)
             member.put()
         destination = self.request.get('return')
-        print 'Return to',destination
         return self.redirect(destination)
 
 class CarDetail(utils.auth.AuthHandler):
