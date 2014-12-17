@@ -230,7 +230,12 @@ class MemberProcess(utils.auth.AuthHandler):
             member.status = self.get_status(constants.WELCOME_LETTER_NAME)
             # update the status to paid membership due.
             dues = MembershipDues.all().ancestor(member).fetch(25)
+
             current_year = datetime.datetime.now().year
+            # Set next year if this at the end of the previous.
+            if (datetime.datetime.now().month >= 11):
+                current_year = current_year + 1
+
             found = False
             for due in dues:
                 if due.year == current_year:
