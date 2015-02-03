@@ -23,6 +23,7 @@ from google.appengine.ext import db
 from google.appengine.api import search
 from google.appengine.api import memcache
 import datetime
+YEAR_MAX = 25
 
 class Country(db.Model):
     """Country. Just to make things simple."""
@@ -128,7 +129,6 @@ class Member(db.Model):
             search.TextField(name='county', value=self.county),
             search.TextField(name='notes', value=self.notes),
             search.TextField(name='status', value=self.status.name),
-            search.TextField(name='status', value=self.status.name),
             search.TextField(name='type', value=self.membertype.name),
             search.TextField(name='number', value=self.number),
             search.TextField(name='zip', value=self.zipcode),
@@ -148,6 +148,18 @@ class Member(db.Model):
         if self.phone_home:
             fieldlist.append(search.TextField(name='phone_home', \
                 value=self.phone_home))
+
+        current_year = datetime.datetime.now().year
+        paid_dues = {}
+        for year in range(current_year-5, current_year+5):
+            paid_dues[year] = 0
+        dues = MembershipDues.all().ancestor(self).fetch(YEAR_MAX)
+        for due in dues:
+            if due.paid:
+                paid_dues[due.year] = 1
+
+        for index_due in range(current_year-5, current_year+5):
+            fieldlist.append(search.NumberField(name='kontingent' + str(index_due), value=paid_dues[index_due]))
 
         # TODO: Add cars to index?
         return search.Document(

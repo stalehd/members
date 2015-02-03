@@ -36,9 +36,9 @@ class UnpaidMembershipDues(ReportGenerator):
         return u'Ikke betalt kontingent innenværende år'
 
     def description(self):
-        return u"""Liste over de som ikke har betalt kontingent inneværende år.
-        Inkluderer ikke de som har kontingenten satt til 0, slik som Alfanytt
-        og Hedersmedlemmer."""
+        return u"""Liste over de som ikke har betalt kontingent inneværende år
+        eller i fjor. Dette inkluderer ikke de som har kontingenten satt til 0,
+        slik som Alfanytt og Hedersmedlemmer."""
 
     def report_task(self):
         filename = self.get_filename(self.id())

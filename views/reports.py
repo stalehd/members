@@ -28,12 +28,14 @@ import cloudstorage
 import lists.unpaid
 import lists.magazine
 import lists.newmembers
+import lists.newsletter
 
 # This is the array of available reports
 report_generators = [
     lists.unpaid.UnpaidMembershipDues(),
     lists.magazine.MagazineRecipients(),
-    lists.newmembers.NewMemberList()
+    lists.newmembers.NewMemberList(),
+    lists.newsletter.NewsletterRecipients(),
 ]
 
 

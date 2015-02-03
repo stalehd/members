@@ -68,6 +68,7 @@ class Admin(object):
         members = Member.all().fetch(10000)
         docs = []
         for member in members:
+            print 'Indexing member',member.number
             docs.append(member.create_document())
             if len(docs) > 100:
                 index = search.Index(name='members')
