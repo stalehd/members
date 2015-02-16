@@ -29,6 +29,7 @@ import lists.unpaid
 import lists.magazine
 import lists.newmembers
 import lists.newsletter
+import lists.tuttimondo
 
 # This is the array of available reports
 report_generators = [
@@ -36,6 +37,7 @@ report_generators = [
     lists.magazine.MagazineRecipients(),
     lists.newmembers.NewMemberList(),
     lists.newsletter.NewsletterRecipients(),
+    lists.tuttimondo.TuttiMondo(),
 ]
 
 

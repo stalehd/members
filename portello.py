@@ -22,6 +22,7 @@
 
 import admin.dump
 import admin.restore
+import admin.reindex
 import ajax
 import cronjobs
 import views.backup
@@ -43,6 +44,7 @@ import webapp2
 application = webapp2.WSGIApplication([
     webapp2.Route('/backup', handler=views.backup.Backup),
     webapp2.Route('/restore', handler=admin.restore.DataRestore),
+    webapp2.Route('/reindex', handler=admin.reindex.Reindex),
 
     webapp2.Route('/', handler=views.main.StartPage),
     webapp2.Route('/start', handler=views.main.StartPage),

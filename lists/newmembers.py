@@ -34,23 +34,28 @@ class NewMemberList(ReportGenerator):
         return u'Nye medlemmer siste 120 dager'
 
     def description(self):
-        return u"""Liste over medlemmer som har meldt seg inn de siste 120
-        dagene, dvs ca fire måneder."""
+        return u"""Liste over medlemmer som har meldt seg inn de siste 150
+        dagene, dvs ca fire-fem måneder."""
 
     def report_task(self):
-        diff = datetime.timedelta(days=120)
+        diff = datetime.timedelta(days=150)
         cutoff_date = datetime.date.today() - diff
 
         filename = self.get_filename(self.id())
         member_list = Member.all().fetch(LIMIT_ALL)
 
         lines = list()
-        lines.append('number;name;zip;city;date')
+        lines.append('number;name;zip;city;date;bil\n')
         for member in member_list:
-            if member.member_since >= cutoff_date:
-                lines.append('"%s";"%s";"%s";"%s";"%s"' % (
+            if member.member_since >= cutoff_date and member.status.name == 'Medlem':
+                cars = member.cars.fetch(1)
+                if len(cars) > 0:
+                    model = cars[0].model.name
+                else:
+                    model = ''
+                lines.append('"%s";"%s";"%s";"%s";"%s";"%s"\n' % (
                     unicode(member.number), unicode(member.name),
                     unicode(member.zipcode), unicode(member.city),
-                    member.member_since.isoformat()))
+                    member.member_since.isoformat(), model))
 
         self.write_report(filename, lines)
