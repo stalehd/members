@@ -61,6 +61,10 @@ class ReportGenerator(object):
             retry_params=write_retry_params)
 
         for line in lines:
-            gcs_file.write(line.encode(encoding))
+            try:
+                gcs_file.write(line.encode(encoding, 'strict'))
+            except UnicodeError:
+                print 'Got error converting ', line.encode('utf-8', 'ignore')
+                gcs_file.write(line.encode(encoding, 'ignore'))
 
         gcs_file.close()

@@ -31,7 +31,7 @@ class NewMemberList(ReportGenerator):
         return 'nye_medlemmer'
 
     def name(self):
-        return u'Nye medlemmer siste 120 dager'
+        return u'Nye medlemmer siste 150 dager'
 
     def description(self):
         return u"""Liste over medlemmer som har meldt seg inn de siste 150
