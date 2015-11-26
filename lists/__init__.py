@@ -22,6 +22,9 @@
 import cloudstorage
 import datetime
 from config import REPORT_BUCKET
+from model import MembershipDues
+
+YEAR_MAX = 25
 
 class ReportGenerator(object):
     """ Abstract report class - implement to make new methods """
@@ -50,7 +53,7 @@ class ReportGenerator(object):
         ts = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
         return '/%s/%s_%s.csv' % (REPORT_BUCKET, report_id, ts)
 
-    def write_report(self, filename, lines):
+    def write_report(self, filename, lines, encoding='utf-8'):
         write_retry_params = cloudstorage.RetryParams(backoff_factor=1.1)
         gcs_file = cloudstorage.open(filename,
             'w',
@@ -58,6 +61,10 @@ class ReportGenerator(object):
             retry_params=write_retry_params)
 
         for line in lines:
-            gcs_file.write(line.encode('utf-8'))
+            try:
+                gcs_file.write(line.encode(encoding, 'strict'))
+            except UnicodeError:
+                print 'Got error converting ', line.encode('utf-8', 'ignore')
+                gcs_file.write(line.encode(encoding, 'ignore'))
 
         gcs_file.close()

@@ -18,44 +18,34 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 # -------------------------------------------------------------------------
-
 from lists import ReportGenerator
 import constants
 from model import Member
-import datetime
 LIMIT_ALL = 2000
-
-class NewMemberList(ReportGenerator):
-    """ List of new member in the last 6 months """
+class NewsletterRecipients(ReportGenerator):
+    """ Address list for newsletter recipients """
     def id(self):
-        return 'nye_medlemmer'
+        return 'gazzetta'
 
     def name(self):
-        return u'Nye medlemmer siste 150 dager'
+        return u'Adresseliste for Gazzetta'
 
     def description(self):
-        return u"""Liste over medlemmer som har meldt seg inn de siste 150
-        dagene, dvs ca fire-fem måneder."""
+        return u""" Adresseliste for distribusjon av Gazzetta. Inkluderer alle
+        som har medlemstypen 'medlem' og 'hedersmedlem'  (Windows-1252/ANSI tegnsett) """
 
     def report_task(self):
-        diff = datetime.timedelta(days=150)
-        cutoff_date = datetime.date.today() - diff
-
         filename = self.get_filename(self.id())
         member_list = Member.all().fetch(LIMIT_ALL)
 
         lines = list()
-        lines.append('number;name;zip;city;date;bil\n')
+        lines.append('number;name;address;zip;city;country;type\n')
         for member in member_list:
-            if member.member_since >= cutoff_date and member.status.name == 'Medlem':
-                cars = member.cars.fetch(1)
-                if len(cars) > 0:
-                    model = cars[0].model.name
-                else:
-                    model = ''
-                lines.append('"%s";"%s";"%s";"%s";"%s";"%s"\n' % (
-                    unicode(member.number), unicode(member.name),
-                    unicode(member.zipcode), unicode(member.city),
-                    member.member_since.isoformat(), model))
+            typename = member.membertype.name
+            if typename == u'Medlem' or typename == u'Hedersmedlem':
+                lines.append('"%s";"%s";"%s";"%s";"%s";"%s";"%s"\n' % (
+                    unicode(member.number), unicode(member.name), unicode(member.address),
+                    unicode(member.zipcode), unicode(member.city), unicode(member.country.name),
+                    typename))
 
-        self.write_report(filename, lines)
+        self.write_report(filename, lines, 'cp1252')

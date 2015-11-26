@@ -50,7 +50,6 @@ class Signup(webapp2.RequestHandler):
     def get_check_field(self, name, incomplete_list, required=True):
         value = self.request.get(name)
         if required and (not value or value.strip() == ''):
-            print 'Missing',name
             incomplete_list.append(name)
         return (value, incomplete_list)
 
@@ -234,9 +233,6 @@ class Signup(webapp2.RequestHandler):
         }
         body = mail_template.render(data)
 
-
-        print 'sending mail with member no',member.number,'and access code',member.edit_access_code
-
         buf = cStringIO.StringIO()
         address = member.name + '\n' + member.address + '\n' + member.zipcode + ' ' + member.city
         if member.country.name != 'Norge':
@@ -247,9 +243,19 @@ class Signup(webapp2.RequestHandler):
 
         data = { 'member_no': member.number, 'account_no': account_no, 'access_code': member.edit_access_code, 'profile_url': constants.PROFILE_URL }
 
+        due_date = datetime.datetime.now() + datetime.timedelta(days=14)
+        due_date_str = due_date.strftime('%d.%m.%Y')
+
+        current_date = datetime.datetime.now()
+        if current_date.month >= 7:
+            fee = member.member_type.fee/2
+        else:
+            fee = member.member_type.fee
+
         pdf = PdfGenerator(member_address=address, club_address=config.get('GIRO_ADDRESS'), account_no=account_no,
             member_no=member.number, access_code=member.edit_access_code, profile_url=constants.PROFILE_URL,
-            heading=config.get('GIRO_SUBJECT'), body=body_template.render(data), fee=member.member_type.fee, due_date='12.12.2012', payment_message=message_template.render(data))
+            heading=config.get('GIRO_SUBJECT'), body=body_template.render(data), fee=fee,
+            due_date=due_date_str, payment_message=message_template.render(data))
 
         pdf.generate_pdf(buf)
 

@@ -43,6 +43,11 @@ handlers:
   secure: always
   script: portello.application
 
+- url: /reindex
+  login: admin
+  secure: always
+  script: portello.application
+
 #- url: /backup
 #  login: admin
 #  secure: always

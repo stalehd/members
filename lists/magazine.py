@@ -21,6 +21,8 @@
 from lists import ReportGenerator
 import constants
 from model import Member
+from datetime import datetime
+
 LIMIT_ALL = 2000
 class MagazineRecipients(ReportGenerator):
     """ Address list for magazine recipients """
@@ -32,8 +34,7 @@ class MagazineRecipients(ReportGenerator):
 
     def description(self):
         return u""" Adresseliste for distribusjon av Alfanytt. Inkluderer alle
-        som har medlemstypen 'medlem', 'støttemedlem', 'alfanytt' og
-        'hedersmedlem' """
+        som har medlemstypen 'medlem', 'alfanytt' og 'hedersmedlem' (Windows-1252/ANSI tegnsett)"""
 
     def report_task(self):
         filename = self.get_filename(self.id())
@@ -43,11 +44,11 @@ class MagazineRecipients(ReportGenerator):
         lines.append('number;name;address;zip;city;country;edit_code;fee;type\n')
         for member in member_list:
             typename = member.membertype.name
-            if typename == u'Medlem' or typename == u'Støttemedlem' or \
+            if typename == u'Medlem' or \
                 typename == u'Alfanytt' or typename == u'Hedersmedlem':
                 lines.append('"%s";"%s";"%s";"%s";"%s";"%s";"%s";%d;"%s"\n' % (
                     unicode(member.number), unicode(member.name), unicode(member.address),
                     unicode(member.zipcode), unicode(member.city), unicode(member.country.name),
                     unicode(member.edit_access_code), member.membertype.fee, typename))
 
-        self.write_report(filename, lines)
+        self.write_report(filename, lines, 'cp1252')

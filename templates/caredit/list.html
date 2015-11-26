@@ -1,0 +1,54 @@
+{% extends 'templates/common.html' %}
+{% block title %}Bilredigering{% endblock %}
+
+{% block content %}
+{{ navbar(active='main') }}
+
+{% include "templates/carselector.html" %}
+
+<script>
+function pickModel(carKey) {
+    window.CarSelector.selectCar(function(modelKey, name, tipo, motore) {
+        $('#model_key').val(modelKey);
+        $('#car_key').val(carKey);
+        $('#update_form').submit();
+    });
+}
+</script>
+<form method="POST" action="/caredit" id="update_form">
+    <input type="hidden" name="car_key" id="car_key" value=""/>
+    <input type="hidden" name="model_key" id="model_key" value=""/>
+</form>
+<div class="container">
+     <ol class="breadcrumb">
+        <li class="active">Bilredigering</li>
+    </ol>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>Bilredigering</h2>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Type bil</th>
+                        <th>Regnr</th>
+                        <th>Årstall</th>
+                        <th>Beskrivelse</th>
+                        <th>Rediger</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for car in cars %}
+                    <tr>
+                        <td>{{ car.model.name }} </td>
+                        <td>{{ linker.get_link(car.registration)|safe }} </td>
+                        <td>{{ car.year if car.year }}</td>
+                        <td>{{ car.notes }}</td>
+                        <td><button onClick="pickModel('{{ car.key()|string }}')" class="btn btn-primary">Velg bil...</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
