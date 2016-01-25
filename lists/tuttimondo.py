@@ -32,7 +32,7 @@ class TuttiMondo(ReportGenerator):
         return 'tuttimondo'
 
     def name(self):
-        return u'Alle medlemmer med betaling'
+        return u'Alle medlemmer med betaling (Windows-1232)'
 
     def description(self):
         return u"""  med navn, nummer, adresse, epost og betalt-status for 3 år fram og tilbake i tid."""
@@ -45,17 +45,20 @@ class TuttiMondo(ReportGenerator):
         year_range = range(current_year - 3, current_year + 3)
 
         lines = list()
-        lines.append('number;name;address;zip;city;country;type')
+        lines.append('number;name;address;zip;city;country;type;email')
         for year in year_range:
             lines.append(';fee' + str(year))
         lines.append('\n')
 
         for member in member_list:
             typename = member.membertype.name
-            lines.append('"%s";"%s";"%s";"%s";"%s";"%s";"%s"' % (
+            emailstr = ''
+            if member.email and member.email != 'None':
+                emailstr = unicode(member.email)
+            lines.append('"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s"' % (
                 unicode(member.number), unicode(member.name), unicode(member.address),
                 unicode(member.zipcode), unicode(member.city), unicode(member.country.name),
-                typename))
+                typename, emailstr))
             due_list  = {}
             for year in year_range:
                 due_list['year' + str(year)] = 0
@@ -71,4 +74,4 @@ class TuttiMondo(ReportGenerator):
 
             lines.append('\n')
 
-        self.write_report(filename, lines)
+        self.write_report(filename, lines, 'cp1252')
