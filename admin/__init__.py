@@ -32,6 +32,7 @@ from model import CarModel
 from model import User
 from model import MembershipDues
 from google.appengine.api import search
+import logging
 
 class Admin(object):
     def __init__(self):
@@ -108,5 +109,20 @@ class Admin(object):
 
 
     def help(self):
-        print 'purge_data, purge_index, create_index, rebuild_index'
+        print 'purge_data, purge_index, create_index, rebuild_index, index_verification'
 
+    def index_verification(self):
+        logging.info('Retrieving member list')
+        member_list = Member.all().fetch(10000)
+        logging.info('Found ' + str(len(member_list)) + ' members')
+        index = search.Index(name='members')
+        for member in member_list:
+            try:
+                result = index.search(query=search.Query('number:' + member.number, options=search.QueryOptions(limit=10)))
+                if not result.results:
+                    logging.warning('Found no entry for member with number ' + member.number + '. Adding to index')
+                    member.update_index()
+
+            except ex:
+                logging.warning('Got exception ex ' + ex)            
+        logging.info('Completed verification')

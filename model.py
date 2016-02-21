@@ -79,7 +79,8 @@ class Member(db.Model):
     user = db.UserProperty(required=False)
     edit_access_code = db.StringProperty(required=False)
     last_change = datetime.datetime.now()
-
+    magazine_count = db.IntegerProperty(required=False, default=1)
+    
     def put(self, **kwargs):
         # update the last_change flag
         self.last_change = datetime.datetime.now()
