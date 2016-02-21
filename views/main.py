@@ -28,10 +28,13 @@ import webapp2
 import constants
 from model import Member
 
+LIMIT = 200
+
 class StartPage(utils.auth.AuthHandler):
     def members_with_status(self, status_name):
         index = search.Index(name='members')
-        results = index.search(query=search.Query('status:' + status_name))
+        results = index.search(query=search.Query('status:' + status_name, options=search.QueryOptions(limit=LIMIT)))
+
         ret = list()
         for document in results:
             ret.append(Member.search_member_from_document(document))

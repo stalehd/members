@@ -30,6 +30,7 @@ import lists.magazine
 import lists.newmembers
 import lists.newsletter
 import lists.tuttimondo
+import lists.distribution
 
 # This is the array of available reports
 report_generators = [
@@ -38,6 +39,7 @@ report_generators = [
     lists.newmembers.NewMemberList(),
     lists.newsletter.NewsletterRecipients(),
     lists.tuttimondo.TuttiMondo(),
+    lists.distribution.AddressList()
 ]
 
 

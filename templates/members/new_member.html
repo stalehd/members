@@ -1,0 +1,132 @@
+{% extends 'templates/common.html' %}
+{% block title %}Rediger medlem{% endblock %}
+
+{% block content %}
+{{ navbar(active='members') }}
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a href="/members">Medlemmer</a></li>
+        <li class="active">(nytt medlem)</li>
+    </ol>
+
+    <h2>Nytt medlem</h2>
+    <form class="form-horizontal" role="form" method="POST" id="memberform">
+        <div class="panel panel-primary">
+
+            <div class="panel-heading">Personopplysninger</div>
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Navn</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" name="name"
+                        value="{{ data['name']|default('') }}"
+                        placeholder="Navn" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="address" class="col-sm-2 control-label">Adresse</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="address" name="address"
+                        value="{{ data['address']|default('') }}"
+                        placeholder="Adresse" required/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="zip" class="col-sm-2 control-label">Postnr/sted</label>
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" id="zip" name="zip"
+                        placeholder="Postnr" value="{{ data['zip']|default('') }}" required/>
+                    </div>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="city" name="city"
+                        placeholder="Poststed" value="{{ data['city']|default('') }}" required />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="country" class="col-sm-2 control-label">Land</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="country" required>
+                            {% for country in countries %}
+                            <option value="{{ country.key() }}">{{ country.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mail" class="col-sm-2 control-label">Epost</label>
+                    <div class="col-sm-10">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="epost" value="{{ data['email']|default('') }}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mobile" class="col-sm-2 control-label">Telefon</label>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="mobile" name="mobile" 
+                        placeholder="Mobil" value="{{ data['mobile']|default('') }}"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="fixed" name="fixed" placeholder="Telefon hjem" value="{{ data['home']|default('') }}"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="work" name="work" placeholder="Telefon arbeid" value="{{ data['work']|default('') }}"/>
+                    </div>
+                    <div class="col-sm-1">
+                        &nbsp;
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="type" class="col-sm-2 control-label">Type medlem</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="type" id="type">
+                            {% for type in types %}
+                            <option value="{{ type.key() }}">{{ type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="status" class="col-sm-2 control-label">Status</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="status" id="status">
+                            {% for status in statuses %}
+                            <option value="{{ status.key() }}">{{ status.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+              
+                <div class="form-group">
+                    <label for="note" class="col-sm-2 control-label">Notater</label>
+                    <div class="col-sm-10">
+                        <textarea id="note" name="note" rows="4" class="form-control">{{ data['comment']|default('') }}</textarea>
+                    </div>
+                </div>               
+
+                <div class="form-group">
+                    <label for="magazine_count" class="col-sm-2 control-label">Antall Alfanytt</label>
+                    <div class="col-sm-10">
+                        <input type="number" min="1" max="100" size="3" class="form-control" id="magazine_count" name="magazine_count" value="1" 
+                        placeholder="Antall"/>
+                    </div>
+                </div>
+
+            </div> <!-- panel-content -->
+        </div> <!-- info panel -->
+
+        <div class="form-group">
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-10">
+                <input type="hidden" name="operation" value="member"/>
+                <button type="submit" name="store" value="1" class="btn btn-primary">Lagre</button>
+                <button type="submit" name="cancel" value="1" class="btn btn-default">Avbryt</button>
+            </div>
+        </div>
+    </form>
+ </div>
+
+{% endblock %}

@@ -36,6 +36,7 @@ import jinja2
 import utils.auth
 import datetime
 import config
+import logging
 
 LIMIT = 50
 
@@ -100,7 +101,7 @@ class List(utils.auth.AuthHandler):
         self.response.write(template.render(data))
 
 class Detail(utils.auth.AuthHandler):
-    def __add_missing_dues(self, dues, start, stop):
+    def add_missing_dues(self, dues, start, stop):
         years = range(start, stop + 1)
         for due in dues:
             if due.year in years:
@@ -116,7 +117,7 @@ class Detail(utils.auth.AuthHandler):
         member = Member.get(member_id)
         dues = MembershipDues.all().ancestor(member).fetch(25)
         current_year = datetime.datetime.now().year
-        self.__add_missing_dues(dues, max(config.FIRST_YEAR_WITH_DUES, member.member_since.year), current_year + config.DUES_AHEAD)
+        self.add_missing_dues(dues, max(config.FIRST_YEAR_WITH_DUES, member.member_since.year), current_year + config.DUES_AHEAD)
         dues = sorted(dues, key=lambda item: item.year, reverse=True)
         data = {
             'countries': countries,
@@ -157,8 +158,6 @@ class Detail(utils.auth.AuthHandler):
             if car:
                 car.delete()
             return self.redirect('/members/' + member_id + '/edit')
-
-
 
         member = Member.get(member_id)
 
@@ -204,7 +203,12 @@ class Detail(utils.auth.AuthHandler):
 
         if self.request.get('access_code') == '':
             member.generate_access_code()
-        # TODO: Options
+
+        if self.request.get('magazine_count') != '':
+            try:
+                member.magazine_count = int(self.request.get('magazine_count'))
+            except ValueError:
+                pass
 
         member.put()
         member.update_index()
@@ -212,8 +216,84 @@ class Detail(utils.auth.AuthHandler):
         # save membership dues
         self.save_dues(member)
 
+
         return self.redirect('/members')
 
+
+class MissingField(Exception):
+    pass
+
+class NewMember(utils.auth.AuthHandler):
+    def get(self):
+        template = JINJA_ENVIRONMENT.get_template('templates/members/new_member.html')
+        countries = Country.all().order('order').fetch(LIMIT)
+        statuses = Status.all().order('order').fetch(LIMIT)
+        types = MemberType.all().order('order').fetch(LIMIT)
+        data = {
+            'countries': countries,
+            'statuses': statuses,
+            'types': types,
+            'data': None
+        }
+        self.response.write(template.render(data))
+
+    def get_var(self, name, optional=False):
+        value = self.request.get(name)
+        if not value and not optional:
+            raise MissingField()
+
+        if value:
+            return value.strip()
+
+        return None
+
+    def post(self):
+        if self.request.get('store') != '1':
+            self.redirect('/members')
+            return
+
+        try:
+            member = Member()
+            member.name = self.get_var('name')
+            member.address = self.get_var('address')
+            member.zipcode = self.get_var('zip')
+            member.city = self.get_var('city')
+            member.country = Country.get(self.get_var('country'))
+            member.email = self.get_var('email', optional=True)
+            member.mobile = self.get_var('mobile', optional=True)
+            member.home = self.get_var('home', optional=True)
+            member.work = self.get_var('work', optional=True)
+            member.membertype = MemberType.get(self.get_var('type'))
+            member.notes = self.get_var('comment', optional=True)
+            member.status = Status.get(self.get_var('status'))
+            member.number = dbutils.create_new_member_no()
+            member.member_since = datetime.date.today()
+            member.generate_access_code()
+            mcount = self.get_var('magazine_count', optional=True)
+            member.magazine_count = int(mcount) if mcount else 1
+            member.put()
+            self.redirect('/members/%s/edit' % member.key())
+            return
+        except MissingField:
+            # TODO: Redirect
+            template = JINJA_ENVIRONMENT.get_template('templates/members/new_member.html')
+            countries = Country.all().order('order').fetch(LIMIT)
+            statuses = Status.all().order('order').fetch(LIMIT)
+            types = MemberType.all().order('order').fetch(LIMIT)
+            data = { }
+            for name in [ 'name', 'address', 'zip', 'country', 'email', 'mobile', 'home', 'work', 'type', 'comment', 'status']:
+                data[name] = self.request.get(name)
+
+            params = {
+                'countries': countries,
+                'statuses': statuses,
+                'types': types,
+                'data': data
+            }
+            self.response.write(template.render(params))
+            return
+
+        self.redirect('/members')
 
 class MemberProcess(utils.auth.AuthHandler):
     def get_status(self, status_name):

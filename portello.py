@@ -50,6 +50,9 @@ application = webapp2.WSGIApplication([
     webapp2.Route('/start', handler=views.main.StartPage),
 
     webapp2.Route('/members', handler=views.members.List),
+
+    webapp2.Route('/members/new', handler=views.members.NewMember),
+
     webapp2.Route('/members/<member_id>/edit', handler=views.members.Detail),
     webapp2.Route('/members/<member_id>/car/<car_id>/edit', \
         handler=views.members.CarDetail),

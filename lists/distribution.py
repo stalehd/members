@@ -24,34 +24,32 @@ from model import Member
 from datetime import datetime
 
 LIMIT_ALL = 2000
-class MagazineRecipients(ReportGenerator):
-    """ Address list for magazine recipients """
+class AddressList(ReportGenerator):
+    """ Address list"""
     def id(self):
-        return 'alfanytt'
+        return 'addresslist'
 
     def name(self):
-        return u'Adresseliste for Alfanytt'
+        return u'Adresseliste'
 
     def description(self):
-        return u""" Adresseliste for distribusjon av Alfanytt. Inkluderer alle
-        som har medlemstypen 'medlem', 'alfanytt' og 'hedersmedlem' (Windows-1252/ANSI tegnsett). 
-        NB! Denne vil ha duplikater for de som skal ha mer enn ett eksemplar av Alfanytt!"""
+        return u""" Adresseliste for distribusjon. Inkluderer alle
+        som har medlemstypen 'medlem', 'alfanytt' og 'hedersmedlem' (Windows-1252/ANSI tegnsett)."""
 
     def report_task(self):
         filename = self.get_filename(self.id())
         member_list = Member.all().fetch(LIMIT_ALL)
 
         lines = list()
-        lines.append('number;name;address;zip;city;country;edit_code;fee;type\n')
+        lines.append('number;name;address;zip;city;country;edit_code;fee;type;magazine_count\n')
         for member in member_list:
             typename = member.membertype.name
+            count = (member.magazine_count if member.magazine_count else 1)
             if typename == u'Medlem' or \
                 typename == u'Alfanytt' or typename == u'Hedersmedlem':
-                count = (member.magazine_count if member.magazine_count else 1)
-                for n in range(0, count):
-                    lines.append('"%s";"%s";"%s";"%s";"%s";"%s";"%s";%d;"%s"\n' % (
-                        unicode(member.number), unicode(member.name), unicode(member.address),
-                        unicode(member.zipcode), unicode(member.city), unicode(member.country.name),
-                        unicode(member.edit_access_code), member.membertype.fee, typename))
+                lines.append('"%s";"%s";"%s";"%s";"%s";"%s";"%s";%d;"%s";%d\n' % (
+                    unicode(member.number), unicode(member.name), unicode(member.address),
+                    unicode(member.zipcode), unicode(member.city), unicode(member.country.name),
+                    unicode(member.edit_access_code), member.membertype.fee, typename, count))
 
         self.write_report(filename, lines, 'cp1252')
