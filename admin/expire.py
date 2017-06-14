@@ -25,31 +25,42 @@ from model import MemberType
 from constants import MEMBER_TYPE_EXPIRED
 from constants import DEFAULT_MEMBER_NAME
 from constants import DEFAULT_MEMBER_STATUS_NAME
+import logging
 
 def expire_members():
-    types = MemberType.all().fetch(30)
+    logging.info('Expiring memberships')
+    types = MemberType.all().fetch(3000)
     expired_type = None
     for mt in types:
         if mt.name == MEMBER_TYPE_EXPIRED:
             expired_type = mt
             break
     if not expired_type:
-        print 'Could not find member type for expired members'
+        logging.info('Could not find member type for expired members. Exiting.')
+        return
 
     members = Member.all().fetch(3000)
     expired_count = 0
-    last_year = datetime.datetime.now().year - 1
+    this_year = datetime.datetime.now().year 
+    total = 0
     for member in members:
-        dues = MembershipDues.all().ancestor(member).fetch(30)
+        total = total + 1
+        dues = MembershipDues.all().ancestor(member).filter('year', this_year).fetch(100)
         all_paid = False
         for due in dues:
-            if due.year >= last_year and due.paid:
+            #logging.info('%s: Y: %s, paid: %s' % (member.number, due.year, due.paid))
+            if not all_paid and due.year == this_year and due.paid:
                 all_paid = True
-                break
-        if not all_paid and member.membertype.name == DEFAULT_MEMBER_NAME and member.status.name == DEFAULT_MEMBER_STATUS_NAME:
-            print 'Member no', member.number, 'has an expired membership'
-            member.membertype = expired_type
-            member.put()
-            expired_count = expired_count + 1
+                #print 'All paid for %s ' % (member.number)
 
-    print expired_count, 'memberships have been ended'
+        if not all_paid:
+            if  member.membertype.name == DEFAULT_MEMBER_NAME:
+                if member.status.name == DEFAULT_MEMBER_STATUS_NAME:
+                    print ('Member no %s has an expired membership (type is %s, status is %s); new type will be %s' %  
+                        (member.number, member.membertype.name, member.status.name, expired_type.name))
+
+                    member.membertype = expired_type
+                    member.put()
+                    expired_count = expired_count + 1
+
+    print ('%d memberships of %d will be expired' % (expired_count, total))

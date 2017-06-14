@@ -31,13 +31,20 @@ from model import Member
 LIMIT = 200
 
 class StartPage(utils.auth.AuthHandler):
+    def skip_member(self, document):
+        for field in document.fields:
+                if field.name == 'type' and field.value == constants.MEMBER_TYPE_EXPIRED:
+                    return True
+        return False
+
     def members_with_status(self, status_name):
         index = search.Index(name='members')
         results = index.search(query=search.Query('status:' + status_name, options=search.QueryOptions(limit=LIMIT)))
 
         ret = list()
         for document in results:
-            ret.append(Member.search_member_from_document(document))
+            if not self.skip_member(document):
+                ret.append(Member.search_member_from_document(document))
         return ret
 
     def get(self):
