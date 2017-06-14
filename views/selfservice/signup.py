@@ -61,7 +61,7 @@ class Signup(webapp2.RequestHandler):
         # Holy crap this is ugly. There has to be a better way.
 
         name = self.request.get('name')
-        if not name or name.strip() == '':
+        if not name or name.strip() == '' or name.strip().startswith('http'):
             incomplete.append('name')
         else:
             values['name'] = name
@@ -69,7 +69,8 @@ class Signup(webapp2.RequestHandler):
 
 
         address = self.request.get('address')
-        if not address or address.strip() == '':
+        # Spammers put URLs in the address field so we reject those right away
+        if not address or address.strip() == '' or address.strip().startswith('http'):
             incomplete.append('address')
         else:
             values['address'] = address
