@@ -25,7 +25,7 @@ from model import MembershipDues
 import datetime
 
 YEAR_MAX = 25
-LIMIT_ALL = 2000
+LIMIT_ALL = 10000
 class TuttiMondo(ReportGenerator):
     """ Everything in the database """
     def id(self):

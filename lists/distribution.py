@@ -23,7 +23,7 @@ import constants
 from model import Member
 from datetime import datetime
 
-LIMIT_ALL = 2000
+LIMIT_ALL = 10000
 class AddressList(ReportGenerator):
     """ Address list"""
     def id(self):

@@ -21,7 +21,7 @@
 from lists import ReportGenerator
 import constants
 from model import Member
-LIMIT_ALL = 2000
+LIMIT_ALL = 10000
 class NewsletterRecipients(ReportGenerator):
     """ Address list for newsletter recipients """
     def id(self):

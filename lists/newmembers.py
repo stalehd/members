@@ -23,7 +23,7 @@ from lists import ReportGenerator
 import constants
 from model import Member
 import datetime
-LIMIT_ALL = 2000
+LIMIT_ALL = 10000
 
 class NewMemberList(ReportGenerator):
     """ List of new member in the last 6 months """
