@@ -24,7 +24,7 @@ from lists import ReportGenerator
 
 import datetime
 
-LIMIT_ALL = 2000
+LIMIT_ALL = 10000
 YEAR_MAX = 25
 
 class UnpaidMembershipDues(ReportGenerator):
