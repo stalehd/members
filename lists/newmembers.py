@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""New members"""
 # -------------------------------------------------------------------------
 # Portello membership system
 # Copyright (C) 2014 Klubb Alfa Romeo Norge
@@ -19,14 +20,15 @@
 #
 # -------------------------------------------------------------------------
 
-from lists import ReportGenerator
-import constants
-from model import Member
 import datetime
+from lists import ReportGenerator
+from model import Member
 LIMIT_ALL = 10000
+
 
 class NewMemberList(ReportGenerator):
     """ List of new member in the last 6 months """
+
     def id(self):
         return 'nye_medlemmer'
 
@@ -49,7 +51,7 @@ class NewMemberList(ReportGenerator):
         for member in member_list:
             if member.member_since >= cutoff_date and member.status.name == 'Medlem':
                 cars = member.cars.fetch(1)
-                if len(cars) > 0:
+                if cars:
                     model = cars[0].model.name
                 else:
                     model = ''

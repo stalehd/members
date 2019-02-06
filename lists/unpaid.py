@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""List of unpaid membership dues"""
 # -------------------------------------------------------------------------
 # Portello membership system
 # Copyright (C) 2014 Klubb Alfa Romeo Norge
@@ -18,17 +19,18 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 # -------------------------------------------------------------------------
+import datetime
 from model import MembershipDues
 from model import Member
 from lists import ReportGenerator
 
-import datetime
-
 LIMIT_ALL = 10000
 YEAR_MAX = 25
 
+
 class UnpaidMembershipDues(ReportGenerator):
     """ Report with unpaid membership dues """
+
     def id(self):
         return 'exmembers'
 
@@ -63,7 +65,8 @@ class UnpaidMembershipDues(ReportGenerator):
 
         # Make CSV file
         lines = list()
-        lines.append('number;name;address;zip;city;country;email;phone;member_since;type;status\n')
+        lines.append(
+            'number;name;address;zip;city;country;email;phone;member_since;type;status\n')
         for member in final_list:
             datestr = ''
             if member.member_since:
@@ -75,8 +78,10 @@ class UnpaidMembershipDues(ReportGenerator):
             if member.email and member.email != 'None':
                 emailstr = unicode(member.email)
             lines.append('"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s";%s;"%s";"%s"\n' % (
-                unicode(member.number), unicode(member.name), unicode(member.address),
-                unicode(member.zipcode), unicode(member.city), unicode(member.country.name),
+                unicode(member.number), unicode(
+                    member.name), unicode(member.address),
+                unicode(member.zipcode), unicode(
+                    member.city), unicode(member.country.name),
                 emailstr, phonestr, datestr,
                 unicode(member.membertype.name), unicode(member.status.name)))
 

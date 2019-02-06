@@ -29,6 +29,7 @@ COOKIE_NAME = 'karn_profile'
 SESSION_DURATION = 3600
 FETCH_LIMIT = 100
 
+
 class Form(webapp2.RequestHandler):
     def get_cookie(self):
         cookie = self.request.cookies.get(COOKIE_NAME)
@@ -65,11 +66,11 @@ class Form(webapp2.RequestHandler):
         countries = Country.all().order('order').fetch(FETCH_LIMIT)
 
         # OK - everything checks out - show edit form
-        template = JINJA_ENVIRONMENT.get_template('templates/selfservice/profile_edit.html')
+        template = JINJA_ENVIRONMENT.get_template(
+            'templates/selfservice/profile_edit.html')
 
-        data = { 'member': member, 'countries': countries }
+        data = {'member': member, 'countries': countries}
         self.response.write(template.render(data))
-
 
     def get_required(self, name):
         value = self.request.get(name)
@@ -105,11 +106,12 @@ class Form(webapp2.RequestHandler):
             member.phone_work = db.PhoneNumber(work)
 
         member.put()
+        member.update_index()
 
-        template = JINJA_ENVIRONMENT.get_template('templates/selfservice/profile_edit.html')
+        template = JINJA_ENVIRONMENT.get_template(
+            'templates/selfservice/profile_edit.html')
         countries = Country.all().order('order').fetch(FETCH_LIMIT)
 
-        data = { 'message': 'Medlemsprofilen din er oppdatert.', 'member': member, 'countries': countries }
+        data = {'message': 'Medlemsprofilen din er oppdatert.',
+                'member': member, 'countries': countries}
         self.response.write(template.render(data))
-
-

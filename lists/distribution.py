@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Distribution report"""
 # -------------------------------------------------------------------------
 # Portello membership system
 # Copyright (C) 2014 Klubb Alfa Romeo Norge
@@ -19,13 +20,14 @@
 #
 # -------------------------------------------------------------------------
 from lists import ReportGenerator
-import constants
 from model import Member
-from datetime import datetime
 
-LIMIT_ALL = 10000
+LIMIT_ALL = 20000
+
+
 class AddressList(ReportGenerator):
     """ Address list"""
+
     def id(self):
         return 'addresslist'
 
@@ -41,15 +43,18 @@ class AddressList(ReportGenerator):
         member_list = Member.all().fetch(LIMIT_ALL)
 
         lines = list()
-        lines.append('number;name;address;zip;city;country;edit_code;fee;type;magazine_count\n')
+        lines.append(
+            'number;name;address;zip;city;country;edit_code;fee;type;magazine_count\n')
         for member in member_list:
             typename = member.membertype.name
             count = (member.magazine_count if member.magazine_count else 1)
             if typename == u'Medlem' or \
-                typename == u'Alfanytt' or typename == u'Hedersmedlem':
+                    typename == u'Alfanytt' or typename == u'Hedersmedlem':
                 lines.append('"%s";"%s";"%s";"%s";"%s";"%s";"%s";%d;"%s";%d\n' % (
-                    unicode(member.number), unicode(member.name), unicode(member.address),
-                    unicode(member.zipcode), unicode(member.city), unicode(member.country.name),
+                    unicode(member.number), unicode(
+                        member.name), unicode(member.address),
+                    unicode(member.zipcode), unicode(
+                        member.city), unicode(member.country.name),
                     unicode(member.edit_access_code), member.membertype.fee, typename, count))
 
         self.write_report(filename, lines, 'cp1252')

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Backup databas to a JSON file"""
 # -------------------------------------------------------------------------
 # Portello membership system
 # Copyright (C) 2014 Klubb Alfa Romeo Norge
@@ -18,19 +19,20 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 # -------------------------------------------------------------------------
-from google.appengine.api import app_identity
+import webapp2
 import cloudstorage as gcs
 
 from admin.dump import DataDump
 from config import JINJA_ENVIRONMENT
 from config import BACKUP_BUCKET
-import webapp2
-import os
+
 
 class Backup(webapp2.RequestHandler):
     """ Do a data dump of *everything*. Big data = big break. Small data =
     not so slow. """
+
     def get_files(self):
+        """Get files from GCS"""
         files = []
         stats = gcs.listbucket('/%s/backups' % BACKUP_BUCKET, max_keys=100)
         for stat in stats:
@@ -38,19 +40,19 @@ class Backup(webapp2.RequestHandler):
         return files
 
     def get(self):
-        template = JINJA_ENVIRONMENT.get_template('templates/backup/backup.html')
-        self.response.write(template.render({ 'message': '', 'files': self.get_files() }))
-
+        """Show backup page"""
+        template = JINJA_ENVIRONMENT.get_template(
+            'templates/backup/backup.html')
+        self.response.write(template.render(
+            {'message': '', 'files': self.get_files()}))
 
     def post(self):
-        template = JINJA_ENVIRONMENT.get_template('templates/backup/backup.html')
+        """Run backup"""
+        template = JINJA_ENVIRONMENT.get_template(
+            'templates/backup/backup.html')
         dump = DataDump()
         filename = dump.do_backup()
 
-
         message = 'Backing up to %s' % (filename)
-        self.response.write(template.render({'message': message, 'files': self.get_files() }))
-
-
-
-
+        self.response.write(template.render(
+            {'message': message, 'files': self.get_files()}))

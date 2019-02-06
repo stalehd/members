@@ -2,3 +2,6 @@ cron:
 - description: do backup
   url: /cron/backup
   schedule: every day 13:37
+- description: do reindex
+  url: /reindex
+  schedule: every monday 04:30

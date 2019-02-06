@@ -27,21 +27,23 @@ from constants import DEFAULT_MEMBER_NAME
 from constants import DEFAULT_MEMBER_STATUS_NAME
 import logging
 
+
 def expire_members():
     logging.info('Expiring memberships')
-    types = MemberType.all().fetch(3000)
+    types = MemberType.all().fetch(10000)
     expired_type = None
     for mt in types:
         if mt.name == MEMBER_TYPE_EXPIRED:
             expired_type = mt
             break
     if not expired_type:
-        logging.info('Could not find member type for expired members. Exiting.')
+        logging.info(
+            'Could not find member type for expired members. Exiting.')
         return
 
-    members = Member.all().fetch(3000)
+    members = Member.all().fetch(10000)
     expired_count = 0
-    this_year = datetime.datetime.now().year 
+    this_year = datetime.datetime.now().year
     total = 0
     for member in members:
         total = total + 1
@@ -51,13 +53,13 @@ def expire_members():
             #logging.info('%s: Y: %s, paid: %s' % (member.number, due.year, due.paid))
             if not all_paid and due.year == this_year and due.paid:
                 all_paid = True
-                #print 'All paid for %s ' % (member.number)
+                # print 'All paid for %s ' % (member.number)
 
         if not all_paid:
-            if  member.membertype.name == DEFAULT_MEMBER_NAME:
+            if member.membertype.name == DEFAULT_MEMBER_NAME:
                 if member.status.name == DEFAULT_MEMBER_STATUS_NAME:
-                    print ('Member no %s has an expired membership (type is %s, status is %s); new type will be %s' %  
-                        (member.number, member.membertype.name, member.status.name, expired_type.name))
+                    print ('Member no %s has an expired membership (type is %s, status is %s); new type will be %s' %
+                           (member.number, member.membertype.name, member.status.name, expired_type.name))
 
                     member.membertype = expired_type
                     member.put()

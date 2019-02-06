@@ -35,17 +35,19 @@ from config import Configuration
 from jinja2 import Template
 import constants
 
+
 class Signup(webapp2.RequestHandler):
     """Member signup form"""
 
     def get(self):
-        template = JINJA_ENVIRONMENT.get_template('templates/selfservice/signup.html')
+        template = JINJA_ENVIRONMENT.get_template(
+            'templates/selfservice/signup.html')
         countries = Country.all().order('order').fetch(100)
         self.response.write(template.render({
             'countries': countries,
             'incomplete': [],
             'complete': [],
-            'values': { } }))
+            'values': {}}))
 
     def get_check_field(self, name, incomplete_list, required=True):
         value = self.request.get(name)
@@ -67,7 +69,6 @@ class Signup(webapp2.RequestHandler):
             values['name'] = name
             complete.append('name')
 
-
         address = self.request.get('address')
         # Spammers put URLs in the address field so we reject those right away
         if not address or address.strip() == '' or address.strip().startswith('http'):
@@ -76,14 +77,12 @@ class Signup(webapp2.RequestHandler):
             values['address'] = address
             complete.append('address')
 
-
         zipcode = self.request.get('zip')
         if (not zipcode or zipcode.strip() == '') or len(zipcode.strip()) < 4:
             incomplete.append('zip')
         else:
             values['zip'] = zipcode
             complete.append('zip')
-
 
         city = self.request.get('city')
         if not city or city.strip() == '':
@@ -94,7 +93,6 @@ class Signup(webapp2.RequestHandler):
 
         if 'zip' in incomplete or 'city' in incomplete:
             incomplete.append('zipcity')
-
 
         country_key = self.request.get('country').strip()
         country = Country.get(country_key)
@@ -142,7 +140,8 @@ class Signup(webapp2.RequestHandler):
         if member_type == '1':
             mtype = next(t for t in types if t.name == DEFAULT_MEMBER_NAME)
         else:
-            mtype = next(t for t in types if t.name == DEFAULT_SUPPORT_MEMBER_NAME)
+            mtype = next(t for t in types if t.name ==
+                         DEFAULT_SUPPORT_MEMBER_NAME)
 
         values['type'] = mtype.name
         comment = self.request.get('comment')
@@ -161,17 +160,19 @@ class Signup(webapp2.RequestHandler):
 
         if len(incomplete) > 0:
             # missing field, redirect to signup page again
-            template = JINJA_ENVIRONMENT.get_template('templates/selfservice/signup.html')
+            template = JINJA_ENVIRONMENT.get_template(
+                'templates/selfservice/signup.html')
             return self.response.write(template.render({
                 'countries': countries,
                 'incomplete': incomplete,
                 'complete': complete,
                 'error_message': error_message,
-                'values': values }))
+                'values': values}))
 
         # invariant: fields are OK, create new member, send mail,
         # create payment history on member.
-        template = JINJA_ENVIRONMENT.get_template('templates/selfservice/signup_receipt.html')
+        template = JINJA_ENVIRONMENT.get_template(
+            'templates/selfservice/signup_receipt.html')
         data = {
             'values': values,
             'profile_url': PROFILE_URL
@@ -208,6 +209,7 @@ class Signup(webapp2.RequestHandler):
         new_member.member_since = datetime.date.today()
         new_member.member_type = mtype
         new_member.put()
+        new_member.update_index()
 
         self.send_welcome_mail(new_member)
         self.send_notification_mails(new_member)
@@ -235,32 +237,35 @@ class Signup(webapp2.RequestHandler):
         body = mail_template.render(data)
 
         buf = cStringIO.StringIO()
-        address = member.name + '\n' + member.address + '\n' + member.zipcode + ' ' + member.city
+        address = member.name + '\n' + member.address + \
+            '\n' + member.zipcode + ' ' + member.city
         if member.country.name != 'Norge':
             address = address + '\n' + member.country.name
 
         body_template = Template(config.get('GIRO_TEXT'))
         message_template = Template(config.get('GIRO_MESSAGE'))
 
-        data = { 'member_no': member.number, 'account_no': account_no, 'access_code': member.edit_access_code, 'profile_url': constants.PROFILE_URL }
+        data = {'member_no': member.number, 'account_no': account_no,
+                'access_code': member.edit_access_code, 'profile_url': constants.PROFILE_URL}
 
         due_date = datetime.datetime.now() + datetime.timedelta(days=14)
         due_date_str = due_date.strftime('%d.%m.%Y')
 
         current_date = datetime.datetime.now()
         if current_date.month >= 7:
-            fee = member.member_type.fee/2
+            fee = member.member_type.fee / 2
         else:
             fee = member.member_type.fee
 
         pdf = PdfGenerator(member_address=address, club_address=config.get('GIRO_ADDRESS'), account_no=account_no,
-            member_no=member.number, access_code=member.edit_access_code, profile_url=constants.PROFILE_URL,
-            heading=config.get('GIRO_SUBJECT'), body=body_template.render(data), fee=fee,
-            due_date=due_date_str, payment_message=message_template.render(data))
+                           member_no=member.number, access_code=member.edit_access_code, profile_url=constants.PROFILE_URL,
+                           heading=config.get('GIRO_SUBJECT'), body=body_template.render(data), fee=fee,
+                           due_date=due_date_str, payment_message=message_template.render(data))
 
         pdf.generate_pdf(buf)
 
-        mail.send_mail(sender_address, member.email, subject, body, attachments=[('kontingent.pdf', buf.getvalue())])
+        mail.send_mail(sender_address, member.email, subject,
+                       body, attachments=[('kontingent.pdf', buf.getvalue())])
 
     def send_notification_mails(self, member):
         """Send the notification mail"""
@@ -269,7 +274,8 @@ class Signup(webapp2.RequestHandler):
         subject = config.get('NOTIFICATION_MAIL_SUBJECT')
         recipients = config.get('NOTIFICATION_MAIL_RECIPIENTS')
 
-        mail_template = JINJA_ENVIRONMENT.get_template('templates/emails/notification_signup.txt')
+        mail_template = JINJA_ENVIRONMENT.get_template(
+            'templates/emails/notification_signup.txt')
         data = {
             'member': member,
             'server_url': SERVER_URL

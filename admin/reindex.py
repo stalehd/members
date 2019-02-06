@@ -33,17 +33,18 @@ from model import Member
 from model import MembershipDues
 from admin import Admin
 
-LIMIT_ALL = 3000
+LIMIT_ALL = 10000
+
 
 def reindex_stuff(dummy):
     a = Admin()
     a.rebuild_index()
 
+
 class Reindex(webapp2.RequestHandler):
     def get(self):
         ts = datetime.datetime.now().strftime('%Y-%m-%dT%H%M%S')
 
-        deferred.defer(reindex_stuff, [], _name=('rebuild_index_'+ts))
+        deferred.defer(reindex_stuff, [], _name=('rebuild_index_' + ts))
 
         self.response.write('Task submitted')
-

@@ -321,10 +321,10 @@ class MemberProcess(utils.auth.AuthHandler):
                 if due.year == current_year:
                     due.paid = True
                     found = True
-                    print 'Updated existing due'
+                    print('Updated existing due')
                     due.put()
             if not found:
-                print 'Due not found, created new'
+                print ('Due not found, created new')
                 due = MembershipDues(parent=member, year=current_year, paid=True)
                 due.put()
             member.put()

@@ -5,39 +5,48 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h1>Bli medlem i Klubb Alfa Romeo!</h1>
-            <br />
-            <span>Som medlem i Norges største italienske bilklubb får du:</span>
-            <br />
-            <ul>
-                <li>Velkomstpakke med Alfanytt, klistremerker og gyldig medlemskort</li>
-                <li>Magasinet Alfanytt levert i din postkasse 4 ganger i året</li>
-                <li>Mulighet til å handle i klubbshoppen «Bottega»</li>
-                <li>Klubbrabatt på verksteder, restauranter og i butikker over hele landet</li>
-                <li>Invitasjoner til lokale treff, banekjøring, fellesturer og Italiensk Dag</li>
-                <li>Gunstig veteranbilforsikring</li>
-            </ul>
-            <br />
             <p>
-                Medlemskap for 2018 koster kr 500,-.
-                <br /><br />
-                Etter den 1. juli betaler du halv kontingent. Hvis du betaler full kontingent etter den 1. november blir du medlem for neste år også.
-                <br />
-                Fyll inn feltene nedenfor og trykk på knappen «Jeg vil bli medlem». 
-                <br />
-                Du vil deretter automatisk motta en epost med innbetalingsgiro. 
-                <br />
-                Betal giroen med én gang, så du ikke går glipp av neste Alfanytt. 
-                <br />
-                Jo raskere du betaler, desto raskere vil du motta velkomstpakken med det gyldige medlemskortet. 
-                <br />
-                Ta kontakt med klubbens kasserer, <a href="mailto:kasserer@klubbalfaromeo.no">kasserer@klubbalfaromeo.no</a>, om du ikke har fått noen epost tilsendt.
+                Her melder du deg inn i Klubb Alfa Romeo. Klubben ble stiftet i 1982
+                og har til enhver tid 1000-1500 medlemmer og cirka 10 lokale avdelinger.
+                Klubben er åpen for alle italofile og favner bredt: På våre treff
+                er alle de italienske bilmerkene hjertelig velkomne.
             </p>
-            <br />
+            <p>
+                Som medlem mottar du Alfanytt 4 ganger pr. år, uansett hvilket land du bor i.
+                Magasinet fås ikke kjøpt i butikkene og lages eksklusivt for medlemmene.
+                Det handler først og fremst om Alfa Romeo, men også Fiat, Abarth,
+                Lancia og Maserati i tillegg til italiensk mat, øl og reiseliv.
+                Samme magasin gir deg full oversikt over kommende treff og
+                beskrivelse av mer enn 100 rabatterte medlemstilbud.
+            </p>
+            <p>
+                Som medlem har du eksklusiv rett til å handle i nettbutikken Bottega.
+                Her får du kjøpt klær og klubbeffekter, samt et og annet til Alfaen
+                din. Klubbens særegne kalender sendes ut om sommeren rett før
+                stiftelsesdatoen for A.L.F.A.
+            </p>
+            <p>
+                Praktisk info:<br />
+                Et vanlig medlemskap koster kr 500 i året. Ved første innmelding
+                vil du motta en velkomstpakke etter 1-2 måneder. Pakkene
+                sendes ikke ut fortløpende, men i bolker. Om du melder deg
+                inn i august-november, betaler du halv pris ut året. Om du
+                melder deg inn i desember, betaler du full pris, men får
+                medlemskap hele neste år inkludert i prisen.
+            </p>
+            <p>
+                Når du har sendt inn skjemaet nedenfor, vil du motta en faktura
+                på e-post. NB! Det er først når du har betalt den, at du er
+                innmeldt. Jo raskere du betaler, desto raskere får du Alfanytt
+                og velkomstpakke. Vi har også et billigere støttemedlemskap
+                når flere personer i samme husstand vil være medlem. Om du har
+                spørsmål, store eller små, kontakt oss på følgende
+                e-postadresse: <a href="mailto:medlemskontakt@klubbalfaromeo.no">medlemskontakt@klubbalfaromeo.no</a>
+            </p>
         </div>
     </div>
     {% if incomplete %}
-        {% if error_message %}
+    {% if error_message %}
     <div class="row">
         <div class="col-sm-12">
             <div class="alert alert-danger">
@@ -45,7 +54,7 @@
             </div>
         </div>
     </div>
-        {% else %}
+    {% else %}
     <div class="row">
         <div class="col-sm-12">
             <div class="alert alert-danger">
@@ -61,8 +70,8 @@
                 <div class="form-group {% if 'name' in complete %}has-success has-feedback{% endif %} {%if 'name' in incomplete %}has-error has-feedback{% endif %}">
                     <label for="name" class="col-sm-4 control-label">Navn</label>
                     <div class="col-sm-6">
-                        <input type="textr" class="form-control" id="name" name="name"
-                            placeholder="Navn" value="{{ values['name'] }}"  required="1"/>
+                        <input type="textr" class="form-control" id="name" name="name" placeholder="Navn" value="{{ values['name'] }}"
+                            required="1" />
                         {% if 'name' in incomplete %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{%endif%}
                         {% if 'name' in complete %}<span class="glyphicon glyphicon-ok form-control-feedback"></span>{%endif%}
                     </div>
@@ -73,8 +82,8 @@
                 <div class="form-group {% if 'address' in complete %}has-success has-feedback{% endif %} {%if 'address' in incomplete %}has-error has-feedback{% endif %}">
                     <label for="address" class="col-sm-4 control-label">Adresse</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control" id="address" name="address"
-                            placeholder="Adresse" value="{{ values['address'] }}"  required/>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Adresse" value="{{ values['address'] }}"
+                            required />
                         {% if 'address' in incomplete %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{%endif%}
                         {% if 'address' in complete %}<span class="glyphicon glyphicon-ok form-control-feedback"></span>{%endif%}
                     </div>
@@ -85,14 +94,14 @@
                 <div class="form-group {% if 'zipcity' in complete %}has-success has-feedback{% endif %} {%if 'zipcity' in incomplete %}has-error has-feedback{% endif %}">
                     <label for="zip" class="col-sm-4 control-label">Postnr/sted</label>
                     <div class="col-sm-2">
-                        <input type="text" class="form-control" id="zip" name="zip"
-                        placeholder="Postnr" value="{{ values['zip'] }}"  required="1"/>
+                        <input type="text" class="form-control" id="zip" name="zip" placeholder="Postnr" value="{{ values['zip'] }}"
+                            required="1" />
                         {% if 'zipcity' in incomplete %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{%endif%}
                         {% if 'zipcity' in complete %}<span class="glyphicon glyphicon-ok form-control-feedback"></span>{%endif%}
                     </div>
                     <div class="col-sm-4">
-                        <input type="text" class="form-control" id="city" name="city"
-                        placeholder="Poststed" value="{{ values['city'] }}"  required="1"/>
+                        <input type="text" class="form-control" id="city" name="city" placeholder="Poststed" value="{{ values['city'] }}"
+                            required="1" />
                         {% if 'zipcity' in incomplete %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{%endif%}
                         {% if 'zipcity' in complete %}<span class="glyphicon glyphicon-ok form-control-feedback"></span>{%endif%}
                     </div>
@@ -105,10 +114,8 @@
                     <div class="col-sm-6">
                         <select class="form-control" name="country">
                             {% for country in countries %}
-                            <option value="{{ country.key() }}"{%
-                            if (values['country'] and values['country'] == country.name) or 'Norge' == country.name
-                            %} selected="1" {%
-                            endif %}>{{ country.name }}</option>
+                            <option value="{{ country.key() }}" {% if (values['country'] and values['country']==country.name)
+                                or 'Norge'==country.name %} selected="1" {% endif %}>{{ country.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -121,8 +128,8 @@
                 <div class="form-group {% if 'email' in complete %}has-success has-feedback{% endif %} {%if 'email' in incomplete %}has-error has-feedback{% endif %}">
                     <label for="mail" class="col-sm-4 control-label">Epost</label>
                     <div class="col-sm-6">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="epost"
-                            value="{{ values['email'] }}" required="1"/>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="epost" value="{{ values['email'] }}"
+                            required="1" />
                         {% if 'email' in incomplete %}<span class="glyphicon glyphicon-remove form-control-feedback"></span>{%endif%}
                         {% if 'email' in complete %}<span class="glyphicon glyphicon-ok form-control-feedback"></span>{%endif%}
                     </div>
@@ -134,13 +141,16 @@
                 <div class="form-group">
                     <label for="mobile" class="col-sm-4 control-label">Telefon</label>
                     <div class="col-sm-2">
-                        <input type="text" class="form-control" id="mobile" name="mobile" value="{{ values['mobile'] }}" placeholder="Mobil"/>
+                        <input type="text" class="form-control" id="mobile" name="mobile" value="{{ values['mobile'] }}"
+                            placeholder="Mobil" />
                     </div>
                     <div class="col-sm-2">
-                        <input type="text" class="form-control" id="home" name="home" value="{{ values['home'] }}" placeholder="Telefon hjem"/>
+                        <input type="text" class="form-control" id="home" name="home" value="{{ values['home'] }}"
+                            placeholder="Telefon hjem" />
                     </div>
                     <div class="col-sm-2">
-                        <input type="text" class="form-control" id="work" name="work" value="{{ values['work'] }}" placeholder="Telefon arbeid"/>
+                        <input type="text" class="form-control" id="work" name="work" value="{{ values['work'] }}"
+                            placeholder="Telefon arbeid" />
                     </div>
                     <div class="col-sm-2">
                         &nbsp;

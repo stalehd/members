@@ -20,16 +20,17 @@
 # -------------------------------------------------------------------------
 from model import Member
 
+
 def generate_edit_codes():
     """ Mass update edit codes for members """
-    for member in Member.all().fetch(3000):
+    for member in Member.all().fetch(10000):
         member.generate_access_code()
         member.put()
 
 
 def nonone():
     """ Mass update fields set to 'None'. Please don't ask. """
-    for member in Member.all().fetch(3000):
+    for member in Member.all().fetch(10000):
         mod = False
         if member.email == 'None':
             member.email = None
@@ -53,4 +54,3 @@ def nonone():
 
         if mod:
             member.put()
-

@@ -18,16 +18,18 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 # -------------------------------------------------------------------------
+import datetime
 from lists import ReportGenerator
-import constants
 from model import Member
 from model import MembershipDues
-import datetime
 
 YEAR_MAX = 25
 LIMIT_ALL = 10000
+
+
 class TuttiMondo(ReportGenerator):
     """ Everything in the database """
+
     def id(self):
         return 'tuttimondo'
 
@@ -45,7 +47,7 @@ class TuttiMondo(ReportGenerator):
         year_range = range(current_year - 3, current_year + 3)
 
         lines = list()
-        lines.append('number;name;address;zip;city;country;type;email')
+        lines.append('number;name;address;zip;city;country;type;email;phone')
         for year in year_range:
             lines.append(';fee' + str(year))
         lines.append('\n')
@@ -55,11 +57,17 @@ class TuttiMondo(ReportGenerator):
             emailstr = ''
             if member.email and member.email != 'None':
                 emailstr = unicode(member.email)
-            lines.append('"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s"' % (
-                unicode(member.number), unicode(member.name), unicode(member.address),
-                unicode(member.zipcode), unicode(member.city), unicode(member.country.name),
-                typename, emailstr))
-            due_list  = {}
+            phonestr = ''
+            if member.phone and member.phone != 'None':
+                phonestr = unicode(member.phone)
+
+            lines.append('"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s";"%s"' % (
+                unicode(member.number), unicode(
+                    member.name), unicode(member.address),
+                unicode(member.zipcode), unicode(
+                    member.city), unicode(member.country.name),
+                typename, emailstr, phonestr))
+            due_list = {}
             for year in year_range:
                 due_list['year' + str(year)] = 0
 

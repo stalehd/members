@@ -54,7 +54,7 @@ from model import Car
 from model import ConfigTuple
 from model import MembershipDues
 
-LIMIT_ALL = 3000
+LIMIT_ALL = 10000
 
 def task_do_backup(filename):
     dump = DataDump()

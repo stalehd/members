@@ -54,20 +54,20 @@ application = webapp2.WSGIApplication([
     webapp2.Route('/members/new', handler=views.members.NewMember),
 
     webapp2.Route('/members/<member_id>/edit', handler=views.members.Detail),
-    webapp2.Route('/members/<member_id>/car/<car_id>/edit', \
-        handler=views.members.CarDetail),
-    webapp2.Route('/members/<member_id>/processed', \
-        handler=views.members.MemberProcess),
+    webapp2.Route('/members/<member_id>/car/<car_id>/edit',
+                  handler=views.members.CarDetail),
+    webapp2.Route('/members/<member_id>/processed',
+                  handler=views.members.MemberProcess),
     webapp2.Route('/ranges', handler=views.carmodels.RangeList),
-    webapp2.Route('/ranges/<range_id>/edit', \
-        handler=views.carmodels.RangeDetail),
+    webapp2.Route('/ranges/<range_id>/edit',
+                  handler=views.carmodels.RangeDetail),
 
-    webapp2.Route('/ranges/<range_id>/<model_id>/edit',\
-        handler=views.carmodels.ModelDetail),
+    webapp2.Route('/ranges/<range_id>/<model_id>/edit',
+                  handler=views.carmodels.ModelDetail),
 
     webapp2.Route('/countries', handler=views.countries.List),
-    webapp2.Route('/countries/<country_key>/edit', \
-        handler=views.countries.Detail),
+    webapp2.Route('/countries/<country_key>/edit',
+                  handler=views.countries.Detail),
 
     webapp2.Route('/statuses', handler=views.statuses.List),
     webapp2.Route('/statuses/<status_id>/edit', handler=views.statuses.Detail),
@@ -79,14 +79,14 @@ application = webapp2.WSGIApplication([
     webapp2.Route('/settings/welcome', handler=views.settings.WelcomePreview),
     webapp2.Route('/settings/pdf', handler=views.settings.PdfPreview),
 
-    webapp2.Route('/selfservice/signup', \
-        handler=views.selfservice.signup.Signup),
-    webapp2.Route('/selfservice/profile', \
-        handler=views.selfservice.profile.Login),
-    webapp2.Route('/selfservice/logout', \
-        handler=views.selfservice.profile.Logout),
-    webapp2.Route('/selfservice/profile/<member_no>/edit', \
-        handler=views.selfservice.editprofile.Form),
+    webapp2.Route('/selfservice/signup',
+                  handler=views.selfservice.signup.Signup),
+    webapp2.Route('/selfservice/profile',
+                  handler=views.selfservice.profile.Login),
+    webapp2.Route('/selfservice/logout',
+                  handler=views.selfservice.profile.Logout),
+    webapp2.Route('/selfservice/profile/<member_no>/edit',
+                  handler=views.selfservice.editprofile.Form),
 
     webapp2.Route('/cron/backup', handler=cronjobs.Backup),
 
@@ -96,8 +96,10 @@ application = webapp2.WSGIApplication([
 
     webapp2.Route('/reports', handler=views.reports.ReportList),
     webapp2.Route('/reports/generate', handler=views.reports.ReportGenerator),
-    webapp2.Route('/reports/download/<filename>', handler=views.reports.ReportDownloader),
-    webapp2.Route('/reports/view/<filename>', handler=views.reports.ReportViewer),
+    webapp2.Route('/reports/download/<filename>',
+                  handler=views.reports.ReportDownloader),
+    webapp2.Route('/reports/view/<filename>',
+                  handler=views.reports.ReportViewer),
 
     webapp2.Route('/load', handler=views.load.Loader),
     webapp2.Route('/caredit', handler=views.caredit.CarEdit),
